@@ -54,7 +54,16 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
-
+  rabbitmq:
+    image: rabbitmq:4.1-management-alpine
+    container_name: rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: empsched
+      RABBITMQ_DEFAULT_PASS: empsched
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 volumes:
   db_data:
   es_data:

@@ -10,6 +10,11 @@ spring:
     username: empshed
     password: empshed
     driver-class-name: org.postgresql.Driver
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: empsched
+    password: empsched
 eureka:
   client:
     service-url:
