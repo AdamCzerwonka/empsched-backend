@@ -1,0 +1,60 @@
+services:
+  db:
+    image: postgres:17.5-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./docker/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+  elasticsearch:
+    image: elasticsearch:9.0.1
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - ELASTIC_PASSWORD=changeme
+      - node.name=elasticsearch
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+  logstash:
+    image: logstash:9.0.1
+    container_name: logstash
+    restart: always
+    environment:
+      - 'LS_JAVA_OPTS=-Xms256m -Xmx256m'
+    volumes:
+      - ./docker/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./docker/logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    ports:
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
+  kibana:
+    image: kibana:9.0.1
+    container_name: kibana
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - 'NODE_OPTIONS=--max-old-space-size=512'
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+volumes:
+  db_data:
+  es_data:

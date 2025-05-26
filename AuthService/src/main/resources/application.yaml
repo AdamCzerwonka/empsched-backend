@@ -1,0 +1,18 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: auth-service
+  jpa:
+    open-in-view: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/empshed_auth
+    username: empshed
+    password: empshed
+    driver-class-name: org.postgresql.Driver
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9050/eureka/
+  instance:
+    prefer-ip-address: true
