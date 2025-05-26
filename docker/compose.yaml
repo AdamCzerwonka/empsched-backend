@@ -88,20 +88,28 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ../docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "9090:9090"
+      - "${PROMETHEUS_MAPPED_PORT}:${PROMETHEUS_PORT}"
+    networks:
+      - empsched-backend-network
+
   grafana:
     image: grafana/grafana:12.0.1
     container_name: grafana
     ports:
-      - "3000:3000"
+      - "${GRAFANA_MAPPED_PORT}:${GRAFANA_PORT}"
+    networks:
+      - empsched-backend-network
+
   zipkin:
     image: openzipkin/zipkin:3.5
     container_name: zipkin
     restart: always
     ports:
-      - "9411:9411"
+      - "${ZIPKIN_MAPPED_PORT}:${ZIPKIN_PORT}"
+    networks:
+      - empsched-backend-network
 
 volumes:
   db_data:
