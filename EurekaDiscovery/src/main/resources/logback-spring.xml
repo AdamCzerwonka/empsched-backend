@@ -10,7 +10,7 @@
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>localhost:5044</destination> <!-- Logstash TCP port -->
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>{"app_name": "AUTH_SERVICE"}</customFields>
+            <customFields>{"app_name": "EUREKA_DISCOVERY"}</customFields>
         </encoder>
         <!-- Optional reconnection config -->
         <keepAliveDuration>5 minutes</keepAliveDuration>
