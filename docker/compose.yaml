@@ -4,13 +4,16 @@ services:
     container_name: postgres_db
     restart: always
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_MAPPED_PORT}:${POSTGRES_PORT}"
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./docker/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ../docker/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - empsched-backend-network
+
   elasticsearch:
     image: elasticsearch:9.0.1
     container_name: elasticsearch
@@ -29,7 +32,10 @@ services:
     volumes:
       - es_data:/usr/share/elasticsearch/data
     ports:
-      - "9200:9200"
+      - "${ELASTICSEARCH_MAPPER_PORT}:${ELASTICSEARCH_PORT}"
+    networks:
+      - empsched-backend-network
+
   logstash:
     image: logstash:9.0.1
     container_name: logstash
@@ -37,23 +43,29 @@ services:
     environment:
       - 'LS_JAVA_OPTS=-Xms256m -Xmx256m'
     volumes:
-      - ./docker/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
-      - ./docker/logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ../docker/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ../docker/logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
-      - "5044:5044"
+      - "${LOGSTASH_MAPPED_PORT}:${LOGSTASH_PORT}"
     depends_on:
       - elasticsearch
+    networks:
+      - empsched-backend-network
+
   kibana:
     image: kibana:9.0.1
     container_name: kibana
     restart: always
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=${ELASTICSEARCH_URL}
       - 'NODE_OPTIONS=--max-old-space-size=512'
     ports:
-      - "5601:5601"
+      - "${KIBANA_MAPPED_PORT}:${KIBANA_PORT}"
     depends_on:
       - elasticsearch
+    networks:
+      - empsched-backend-network
+
   rabbitmq:
     image: rabbitmq:4.1-management-alpine
     container_name: rabbitmq
@@ -62,8 +74,15 @@ services:
       RABBITMQ_DEFAULT_USER: empsched
       RABBITMQ_DEFAULT_PASS: empsched
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "${RABBITMQ_MAPPED_PORT}:${RABBITMQ_PORT}"
+      - "${RABBITMQ_MANAGEMENT_MAPPED_PORT}:${RABBITMQ_MANAGEMENT_PORT}"
+    networks:
+      - empsched-backend-network
+
 volumes:
   db_data:
   es_data:
+
+networks:
+  empsched-backend-network:
+    external: true

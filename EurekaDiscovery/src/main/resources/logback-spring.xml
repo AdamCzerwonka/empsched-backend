@@ -8,7 +8,7 @@
         </encoder>
     </appender>
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>localhost:5044</destination> <!-- Logstash TCP port -->
+        <destination>${LOGSTASH_CONNECTION}</destination> <!-- Logstash TCP port -->
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <customFields>{"app_name": "EUREKA_DISCOVERY"}</customFields>
         </encoder>
