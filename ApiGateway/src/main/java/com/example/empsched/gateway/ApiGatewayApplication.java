@@ -18,10 +18,10 @@ public class ApiGatewayApplication {
         return builder.routes()
                 .route("auth-service", r -> r.path("/auth/**")
                         .filters(f -> f.rewritePath("/auth/(?<segment>.*)", "/${segment}"))
-                        .uri("http://localhost:9001"))
+                        .uri("lb://auth-service"))
                 .route("employee-service", r -> r.path("/employees/**")
                         .filters(f -> f.rewritePath("/employees/(?<segment>.*)", "/${segment}"))
-                        .uri("http://localhost:9002"))
+                        .uri("lb://employee-service"))
                 .build();
     }
 }
