@@ -3,6 +3,21 @@ server:
 spring:
   application:
     name: employee-service
+  jpa:
+    open-in-view: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:postgresql://localhost:5432/empshed_employee
+    username: empshed
+    password: empshed
+    driver-class-name: org.postgresql.Driver
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: empsched
+    password: empsched
 eureka:
   client:
     service-url:
