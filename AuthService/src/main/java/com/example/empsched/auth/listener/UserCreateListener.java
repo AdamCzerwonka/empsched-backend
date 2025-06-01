@@ -1,6 +1,5 @@
 package com.example.empsched.auth.listener;
 
-import com.example.empsched.auth.dto.LoginRequest;
 import com.example.empsched.auth.service.UserService;
 import com.example.empsched.shared.dto.UserCreateEventDto;
 import com.example.empsched.shared.utils.SerializerUtils;

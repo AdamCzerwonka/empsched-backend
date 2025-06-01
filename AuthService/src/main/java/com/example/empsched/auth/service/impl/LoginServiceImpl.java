@@ -1,6 +1,7 @@
 package com.example.empsched.auth.service.impl;
 
 import com.example.empsched.auth.entity.User;
+import com.example.empsched.auth.exception.LoginFailedException;
 import com.example.empsched.auth.repository.UserRepository;
 import com.example.empsched.auth.service.JwtService;
 import com.example.empsched.auth.service.LoginService;
@@ -24,6 +25,6 @@ public class LoginServiceImpl implements LoginService {
             return jwtService.generateToken(email);
         }
 
-        throw new RuntimeException("Invalid email or password");
+        throw new LoginFailedException();
     }
 }
