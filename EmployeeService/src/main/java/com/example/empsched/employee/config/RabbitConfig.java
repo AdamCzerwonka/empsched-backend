@@ -10,11 +10,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
     @Bean
-    public TopicExchange topicExchange() {
-        return new TopicExchange("user-exchange");
-    }
-
-    @Bean
     public Queue organisationCreateQueue() {
         return new Queue("organisation.create.queue", true);
     }

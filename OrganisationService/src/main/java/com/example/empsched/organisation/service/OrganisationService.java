@@ -1,6 +1,8 @@
 package com.example.empsched.organisation.service;
 
 
+import com.example.empsched.organisation.dto.CreateOrganisationRequest;
+
 public interface OrganisationService {
-    void createOrganisation(String name, int maxEmployees);
+    void createOrganisation(CreateOrganisationRequest request);
 }

@@ -7,11 +7,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
     @Bean
-    public TopicExchange topicExchange() {
-        return new TopicExchange("user-exchange");
-    }
-
-    @Bean
     public Queue userCreationQueue() {
         return new Queue("user.creation.queue", true);
     }

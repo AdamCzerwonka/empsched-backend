@@ -15,8 +15,7 @@ public class OrganisationController {
 
     @PostMapping
     public ResponseEntity<Void> createOrganisation(@RequestBody CreateOrganisationRequest createOrganisationRequest) {
-        organisationService.createOrganisation(createOrganisationRequest.name(),
-                createOrganisationRequest.maxEmployees());
+        organisationService.createOrganisation(createOrganisationRequest);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,8 +1,7 @@
 package com.example.empsched.employee.service.impl;
 
 import com.example.empsched.employee.service.EmployeeService;
-import com.example.empsched.shared.dto.UserCreateEventDto;
-import com.example.empsched.shared.utils.SerializerUtils;
+import com.example.empsched.shared.dto.UserCreateEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -19,13 +18,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void createEmployee(String email, String password) {
         UUID uuid = UUID.randomUUID();
-        UserCreateEventDto userCreateEvent = UserCreateEventDto.builder()
+        UserCreateEvent userCreateEvent = UserCreateEvent.builder()
                 .id(uuid)
                 .email(email)
                 .password(password)
                 .build();
 
-        String jsonMessage = SerializerUtils.serialize(userCreateEvent);
-        rabbitTemplate.convertAndSend(topicExchange.getName(), "user.create", jsonMessage);
+        rabbitTemplate.convertAndSend(topicExchange.getName(), "user.create", userCreateEvent);
     }
 }
