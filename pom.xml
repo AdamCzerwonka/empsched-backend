@@ -29,6 +29,7 @@
         <module>EurekaDiscovery</module>
         <module>ApiGateway</module>
         <module>CommonShared</module>
+        <module>OrganisationService</module>
     </modules>
 
     <dependencyManagement>

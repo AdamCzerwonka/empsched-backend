@@ -19,7 +19,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow();
+                .orElseThrow(LoginFailedException::new);
 
         if (passwordEncoder.matches(password, user.getPassword())) {
             return jwtService.generateToken(email);

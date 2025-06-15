@@ -18,6 +18,11 @@ spring:
     port: 5672
     username: empsched
     password: empsched
+    template:
+      observation-enabled: true
+    listener:
+      simple:
+        observation-enabled: true
 eureka:
   client:
     service-url:
