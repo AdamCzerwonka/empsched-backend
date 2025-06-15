@@ -2,6 +2,8 @@ package com.example.empsched.organisation.entity;
 
 import com.example.empsched.shared.entity.AbstractEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +16,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(indexes = {
+        @Index(columnList = "name", name = "idx_organisation_name")
+})
 public class Organisation extends AbstractEntity {
     private String name;
     private int maxEmployees;

@@ -7,6 +7,7 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:9050/eureka/
+    eureka-service-url-poll-interval-seconds: 60
   instance:
     prefer-ip-address: true
     metadata-map:

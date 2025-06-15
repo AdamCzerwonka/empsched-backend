@@ -2,6 +2,7 @@ package com.example.empsched.organisation.controller;
 
 import com.example.empsched.organisation.dto.CreateOrganisationRequest;
 import com.example.empsched.organisation.service.OrganisationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,7 @@ public class OrganisationController {
     private final OrganisationService organisationService;
 
     @PostMapping
-    public ResponseEntity<Void> createOrganisation(@RequestBody CreateOrganisationRequest createOrganisationRequest) {
+    public ResponseEntity<Void> createOrganisation(@RequestBody @Valid CreateOrganisationRequest createOrganisationRequest) {
         organisationService.createOrganisation(createOrganisationRequest);
         return ResponseEntity.ok().build();
     }

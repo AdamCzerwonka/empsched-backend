@@ -22,7 +22,7 @@ public class LoginServiceImpl implements LoginService {
                 .orElseThrow(LoginFailedException::new);
 
         if (passwordEncoder.matches(password, user.getPassword())) {
-            return jwtService.generateToken(email);
+            return jwtService.generateToken(email, user.getRoles());
         }
 
         throw new LoginFailedException();

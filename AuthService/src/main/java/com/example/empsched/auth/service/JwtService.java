@@ -1,5 +1,9 @@
 package com.example.empsched.auth.service;
 
+import com.example.empsched.auth.entity.Role;
+
+import java.util.List;
+
 public interface JwtService {
-    String generateToken(final String email);
+    String generateToken(String email, List<Role> roles);
 }

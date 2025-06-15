@@ -1,4 +1,18 @@
 package com.example.empsched.organisation.dto;
 
-public record CreateOrganisationRequest(String name, int maxEmployees, String email, String password) {
+import jakarta.validation.constraints.*;
+
+public record CreateOrganisationRequest(
+        @NotBlank
+        @Size(max = 100)
+        String name,
+        @NotNull
+        @Min(0)
+        int maxEmployees,
+        @Email
+        @NotBlank
+        String email,
+        @NotBlank
+        @Size(min = 8)
+        String password) {
 }

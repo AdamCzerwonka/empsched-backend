@@ -2,6 +2,7 @@ package com.example.empsched.organisation.service.impl;
 
 import com.example.empsched.organisation.dto.CreateOrganisationRequest;
 import com.example.empsched.organisation.entity.Organisation;
+import com.example.empsched.organisation.exception.OrganisationAlreadyExistsException;
 import com.example.empsched.organisation.repository.OrganisationRepository;
 import com.example.empsched.organisation.service.OrganisationService;
 import com.example.empsched.shared.rabbit.RoutingKeys;
@@ -25,13 +26,19 @@ public class OrganisationServiceImpl implements OrganisationService {
     public void createOrganisation(final CreateOrganisationRequest request) {
         final Organisation organisation = new Organisation(request.name(), request.maxEmployees());
 
+        organisationRepository.findByName(request.name())
+                .ifPresent(a -> {
+                    throw new OrganisationAlreadyExistsException(a.getName());
+                });
+
         final OrganisationCreateEvent organisationCreateEvent = OrganisationCreateEvent.builder()
                 .id(organisation.getId())
                 .name(organisation.getName())
                 .maxEmployees(organisation.getMaxEmployees())
                 .build();
 
-        rabbitTemplate.convertAndSend(topicExchange.getName(), RoutingKeys.ORGANISATION_CREATE, organisationCreateEvent);
+        rabbitTemplate.convertAndSend(topicExchange.getName(), RoutingKeys.ORGANISATION_CREATE,
+                organisationCreateEvent);
 
         final UserCreateEvent userCreateEvent = UserCreateEvent.builder()
                 .id(UUID.randomUUID())
