@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: api-gateway
+  threads:
+    virtual:
+      enabled: true
 eureka:
   client:
     service-url:

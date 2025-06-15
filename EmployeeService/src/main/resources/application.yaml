@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: employee-service
+  threads:
+    virtual:
+      enabled: true
 eureka:
   client:
     service-url:
