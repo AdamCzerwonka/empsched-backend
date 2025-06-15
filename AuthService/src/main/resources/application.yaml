@@ -10,7 +10,7 @@ spring:
     open-in-view: false
     generate-ddl: true
     hibernate:
-        ddl-auto: create-drop
+      ddl-auto: create-drop
   datasource:
     url: jdbc:postgresql://localhost:5432/empshed_auth
     username: empshed
@@ -21,6 +21,11 @@ spring:
     port: 5672
     username: empsched
     password: empsched
+    listener:
+      simple:
+        observation-enabled: true
+    template:
+      observation-enabled: true
 eureka:
   client:
     service-url:
