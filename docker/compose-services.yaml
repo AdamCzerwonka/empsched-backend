@@ -1,3 +1,5 @@
+name: empsched-backend-services
+
 services:
   gateway:
     build:
