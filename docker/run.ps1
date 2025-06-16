@@ -1,0 +1,1 @@
+docker compose -f compose.yaml -f compose-services.yaml up -d --build

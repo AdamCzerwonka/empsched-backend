@@ -1,0 +1,3 @@
+Run command to execute JMeter test plan, you can change the file names as needed.
+Do not run test in GUI mode, use non-GUI mode instead (-n).
+jmeter -n -t .\jmeter\get-test-plan.jmx -l .\jmeter\results1.jtl  -e -o .\report1\
