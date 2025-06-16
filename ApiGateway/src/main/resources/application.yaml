@@ -14,11 +14,12 @@ spring:
         webflux:
           globalcors:
             cors-configurations:
-                '[/**]':
-                    allowed-origins: '*'
-                    allowed-methods: '*'
-                    allowed-headers: '*'
-                    allow-credentials: true
+              '[/**]':
+                allowed-origins: 'http://localhost:5173'
+                allowed-methods: '*'
+                allowed-headers: '*'
+          default-filters:
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
 
 eureka:
   client:
