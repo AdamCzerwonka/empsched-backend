@@ -34,6 +34,7 @@ public class Organisation extends AbstractEntity {
         super(UUID.randomUUID());
         this.name = name;
         this.maxEmployees = maxEmployees;
+        this.ownerId = ownerId;
     }
 
     @Override
