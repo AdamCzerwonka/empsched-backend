@@ -10,6 +10,7 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_DEFAULT_ZONE}
+    eureka-service-url-poll-interval-seconds: 60
   instance:
     prefer-ip-address: true
     metadata-map:

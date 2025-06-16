@@ -13,13 +13,13 @@
         <maven.compiler.source>24</maven.compiler.source>
         <maven.compiler.target>24</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-cloud.version>2024.0.1</spring-cloud.version>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.6</version>
+        <version>3.5.0</version>
         <relativePath/>
     </parent>
 
@@ -29,6 +29,7 @@
         <module>EurekaDiscovery</module>
         <module>ApiGateway</module>
         <module>CommonShared</module>
+        <module>OrganisationService</module>
     </modules>
 
     <dependencyManagement>
