@@ -1,0 +1,21 @@
+server:
+  port: 9003
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/empshed_organisation
+    username: empshed
+    password: empshed
+    driver-class-name: org.postgresql.Driver
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: empsched
+    password: empsched
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9050/eureka/
+management:
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans

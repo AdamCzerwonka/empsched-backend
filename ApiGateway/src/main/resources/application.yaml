@@ -1,12 +1,17 @@
 server:
-  port: 8080
+  port: ${GATEWAY_APP_PORT}
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   application:
     name: api-gateway
+  threads:
+    virtual:
+      enabled: true
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:9050/eureka/
+      defaultZone: ${EUREKA_DEFAULT_ZONE}
     eureka-service-url-poll-interval-seconds: 60
   instance:
     prefer-ip-address: true

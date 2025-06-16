@@ -1,0 +1,79 @@
+name: empsched-backend-services
+
+services:
+  gateway:
+    build:
+      context: ..
+      dockerfile: ApiGateway/Dockerfile
+    container_name: gateway
+    restart: always
+    ports:
+      - "${GATEWAY_APP_MAPPED_PORT}:${GATEWAY_APP_PORT}"
+    env_file:
+      - .env.services
+    networks:
+      - empsched-backend-network
+    depends_on:
+      - eureka
+
+  auth:
+    build:
+      context: ..
+      dockerfile: AuthService/Dockerfile
+    container_name: auth
+    restart: always
+    ports:
+      - "${AUTH_APP_MAPPED_PORT}:${AUTH_APP_PORT}"
+    env_file:
+      - .env.services
+    networks:
+      - empsched-backend-network
+    depends_on:
+      - eureka
+
+  employee:
+    build:
+      context: ..
+      dockerfile: EmployeeService/Dockerfile
+    container_name: employee
+    restart: always
+    ports:
+      - "${EMPLOYEE_APP_MAPPED_PORT}:${EMPLOYEE_APP_PORT}"
+    env_file:
+      - .env.services
+    networks:
+      - empsched-backend-network
+    depends_on:
+      - eureka
+
+  eureka:
+    build:
+      context: ..
+      dockerfile: EurekaDiscovery/Dockerfile
+    container_name: eureka
+    restart: always
+    ports:
+      - "${EUREKA_APP_MAPPED_PORT}:${EUREKA_APP_PORT}"
+    env_file:
+      - .env.services
+    networks:
+      - empsched-backend-network
+
+  organisation:
+    build:
+      context: ..
+      dockerfile: OrganisationService/Dockerfile
+    container_name: organisation
+    restart: always
+    ports:
+      - "${ORGANISATION_APP_MAPPED_PORT}:${ORGANISATION_APP_PORT}"
+    env_file:
+      - .env.services
+    networks:
+      - empsched-backend-network
+    depends_on:
+      - eureka
+
+networks:
+  empsched-backend-network:
+    external: true

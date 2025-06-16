@@ -1,6 +1,8 @@
 server:
-  port: 9001
+  port: ${AUTH_APP_PORT}
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   threads:
     virtual:
       enabled: true
@@ -16,15 +18,15 @@ spring:
       ddl-auto: create-drop
     defer-datasource-initialization: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/empshed_auth
-    username: empshed
-    password: empshed
+    url: ${DATASOURCE_URL}${DATASOURCE_AUTH_DATABASE}
+    username: ${DATASOURCE_AUTH_USERNAME}
+    password: ${DATASOURCE_AUTH_PASSWORD}
     driver-class-name: org.postgresql.Driver
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: empsched
-    password: empsched
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
     listener:
       simple:
         observation-enabled: true
@@ -33,7 +35,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:9050/eureka/
+      defaultZone: ${EUREKA_DEFAULT_ZONE}
   instance:
     prefer-ip-address: true
     metadata-map:
@@ -42,7 +44,7 @@ eureka:
 management:
   zipkin:
     tracing:
-      endpoint: http://localhost:9411/api/v2/spans
+      endpoint: ${ZIPKIN_URL}
   endpoints:
     web:
       exposure:
@@ -53,7 +55,6 @@ management:
   tracing:
     sampling:
       probability: 1.0
-
 jwt:
   expiration:
     time: 3600
