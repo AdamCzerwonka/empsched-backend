@@ -25,21 +25,11 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     @Override
     public void createOrganisation(final CreateOrganisationRequest request) {
-        final Organisation organisation = new Organisation(request.name(), request.maxEmployees());
 
         organisationRepository.findByName(request.name())
                 .ifPresent(a -> {
                     throw new OrganisationAlreadyExistsException(a.getName());
                 });
-
-        final OrganisationCreateEvent organisationCreateEvent = OrganisationCreateEvent.builder()
-                .id(organisation.getId())
-                .name(organisation.getName())
-                .maxEmployees(organisation.getMaxEmployees())
-                .build();
-
-        rabbitTemplate.convertAndSend(topicExchange.getName(), RoutingKeys.ORGANISATION_CREATE,
-                organisationCreateEvent);
 
         final UserCreateEvent userCreateEvent = UserCreateEvent.builder()
                 .id(UUID.randomUUID())
@@ -49,6 +39,18 @@ public class OrganisationServiceImpl implements OrganisationService {
                 .build();
 
         rabbitTemplate.convertAndSend(topicExchange.getName(), RoutingKeys.USER_CREATE, userCreateEvent);
+
+        final Organisation organisation = new Organisation(request.name(), request.maxEmployees(),
+                userCreateEvent.id());
+
+        final OrganisationCreateEvent organisationCreateEvent = OrganisationCreateEvent.builder()
+                .id(organisation.getId())
+                .name(organisation.getName())
+                .maxEmployees(organisation.getMaxEmployees())
+                .build();
+
+        rabbitTemplate.convertAndSend(topicExchange.getName(), RoutingKeys.ORGANISATION_CREATE,
+                organisationCreateEvent);
 
         organisationRepository.save(organisation);
     }
