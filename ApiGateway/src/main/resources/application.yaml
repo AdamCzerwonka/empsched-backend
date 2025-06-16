@@ -8,6 +8,18 @@ spring:
   threads:
     virtual:
       enabled: true
+  cloud:
+    gateway:
+      server:
+        webflux:
+          globalcors:
+            cors-configurations:
+                '[/**]':
+                    allowed-origins: '*'
+                    allowed-methods: '*'
+                    allowed-headers: '*'
+                    allow-credentials: true
+
 eureka:
   client:
     service-url:
