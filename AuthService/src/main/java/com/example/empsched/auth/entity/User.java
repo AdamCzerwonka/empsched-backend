@@ -1,6 +1,7 @@
 package com.example.empsched.auth.entity;
 
 import com.example.empsched.shared.entity.AbstractEntity;
+import com.example.empsched.shared.entity.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;

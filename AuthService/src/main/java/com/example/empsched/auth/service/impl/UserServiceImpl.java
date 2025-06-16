@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
                 });
 
         User user = new User(userDto.id(), userDto.email(), hashedPassword);
+        user.getRoles().add(userDto.role());
         userRepository.save(user);
     }
 }

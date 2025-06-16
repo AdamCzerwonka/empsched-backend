@@ -1,6 +1,6 @@
 package com.example.empsched.auth.service.impl;
 
-import com.example.empsched.auth.entity.Role;
+import com.example.empsched.shared.entity.Role;
 import com.example.empsched.auth.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

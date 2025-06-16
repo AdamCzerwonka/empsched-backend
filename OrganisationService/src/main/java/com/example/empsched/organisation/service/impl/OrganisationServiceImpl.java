@@ -5,6 +5,7 @@ import com.example.empsched.organisation.entity.Organisation;
 import com.example.empsched.organisation.exception.OrganisationAlreadyExistsException;
 import com.example.empsched.organisation.repository.OrganisationRepository;
 import com.example.empsched.organisation.service.OrganisationService;
+import com.example.empsched.shared.entity.Role;
 import com.example.empsched.shared.rabbit.RoutingKeys;
 import com.example.empsched.shared.dto.OrganisationCreateEvent;
 import com.example.empsched.shared.dto.UserCreateEvent;
@@ -44,6 +45,7 @@ public class OrganisationServiceImpl implements OrganisationService {
                 .id(UUID.randomUUID())
                 .email(request.email())
                 .password(request.password())
+                .role(Role.ORGANISATION_ADMIN)
                 .build();
 
         rabbitTemplate.convertAndSend(topicExchange.getName(), RoutingKeys.USER_CREATE, userCreateEvent);

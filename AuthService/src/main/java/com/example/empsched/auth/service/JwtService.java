@@ -1,6 +1,6 @@
 package com.example.empsched.auth.service;
 
-import com.example.empsched.auth.entity.Role;
+import com.example.empsched.shared.entity.Role;
 
 import java.util.List;
 

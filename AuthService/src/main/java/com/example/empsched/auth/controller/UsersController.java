@@ -1,5 +1,6 @@
 package com.example.empsched.auth.controller;
 
+import com.example.empsched.auth.dto.UserDto;
 import com.example.empsched.auth.entity.User;
 import com.example.empsched.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,8 @@ public class UsersController {
 
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
+    public ResponseEntity<List<UserDto>> getUsers() {
+        return ResponseEntity.ok(userRepository.findAll().stream().map(user -> new UserDto(user.getId(),
+                user.getEmail(), user.getRoles())).toList());
     }
 }

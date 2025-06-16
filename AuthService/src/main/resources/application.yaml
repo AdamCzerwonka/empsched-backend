@@ -6,11 +6,15 @@ spring:
       enabled: true
   application:
     name: auth-service
+  sql:
+    init:
+      mode: always
   jpa:
     open-in-view: false
     generate-ddl: true
     hibernate:
       ddl-auto: create-drop
+    defer-datasource-initialization: true
   datasource:
     url: jdbc:postgresql://localhost:5432/empshed_auth
     username: empshed
