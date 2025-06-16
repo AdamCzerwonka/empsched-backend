@@ -12,15 +12,15 @@ spring:
     hibernate:
       ddl-auto: create-drop
   datasource:
-    url: jdbc:postgresql://localhost:5432/empshed_employee
-    username: empshed
-    password: empshed
+    url: ${DATASOURCE_URL}${DATASOURCE_EMPLOYEE_DATABASE}
+    username: ${DATASOURCE_EMPLOYEE_USERNAME}
+    password: ${DATASOURCE_EMPLOYEE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: empsched
-    password: empsched
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
     template:
       observation-enabled: true
     listener:
