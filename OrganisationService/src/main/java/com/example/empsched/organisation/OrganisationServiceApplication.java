@@ -1,5 +1,6 @@
 package com.example.empsched.organisation;
 
+import com.example.empsched.shared.configuration.BaseSecurityConfig;
 import com.example.empsched.shared.configuration.ObservationConfig;
 import com.example.empsched.shared.exception.GenericErrorHandler;
 import com.example.empsched.shared.rabbit.RabbitBaseConfiguration;
@@ -11,7 +12,8 @@ import org.springframework.context.annotation.Import;
 @Import({
         GenericErrorHandler.class,
         RabbitBaseConfiguration.class,
-        ObservationConfig.class
+        ObservationConfig.class,
+        BaseSecurityConfig.class
 })
 public class OrganisationServiceApplication {
     public static void main(String[] args) {
