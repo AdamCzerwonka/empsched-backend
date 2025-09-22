@@ -22,16 +22,6 @@ spring:
     username: ${DATASOURCE_AUTH_USERNAME}
     password: ${DATASOURCE_AUTH_PASSWORD}
     driver-class-name: org.postgresql.Driver
-  rabbitmq:
-    host: ${RABBITMQ_HOST}
-    port: ${RABBITMQ_PORT}
-    username: ${RABBITMQ_USERNAME}
-    password: ${RABBITMQ_PASSWORD}
-    listener:
-      simple:
-        observation-enabled: true
-    template:
-      observation-enabled: true
 eureka:
   client:
     service-url:

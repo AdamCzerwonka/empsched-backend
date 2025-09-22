@@ -68,19 +68,6 @@ services:
     networks:
       - empsched-backend-network
 
-  rabbitmq:
-    image: rabbitmq:4.1-management-alpine
-    container_name: rabbitmq
-    restart: always
-    environment:
-      RABBITMQ_DEFAULT_USER: empsched
-      RABBITMQ_DEFAULT_PASS: empsched
-    ports:
-      - "${RABBITMQ_MAPPED_PORT}:${RABBITMQ_PORT}"
-      - "${RABBITMQ_MANAGEMENT_MAPPED_PORT}:${RABBITMQ_MANAGEMENT_PORT}"
-    networks:
-      - empsched-backend-network
-
   prometheus:
     image: prom/prometheus:v3.4.0
     restart: always
@@ -116,6 +103,16 @@ services:
     networks:
       - empsched-backend-network
 
+  temporal:
+    image: temporalio/temporal:1.4.1
+    container_name: temporal
+    restart: always
+    ports:
+      - "${TEMPORAL_MAPPED_PORT}:${TEMPORAL_PORT}"
+      - "${TEMPORAL_UI_MAPPED_PORT}:${TEMPORAL_UI_PORT}"
+    networks:
+      - empsched-backend-network
+    command: server start-dev --ip 0.0.0.0
 volumes:
   db_data:
   es_data:

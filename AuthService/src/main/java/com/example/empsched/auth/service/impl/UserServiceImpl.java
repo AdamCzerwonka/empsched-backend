@@ -4,11 +4,13 @@ import com.example.empsched.auth.entity.User;
 import com.example.empsched.auth.exception.UserAlreadyExists;
 import com.example.empsched.auth.repository.UserRepository;
 import com.example.empsched.auth.service.UserService;
-import com.example.empsched.shared.dto.UserCreateEvent;
+import com.example.empsched.shared.dto.user.CreateUserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,16 +20,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void createUser(UserCreateEvent userDto) {
-        String hashedPassword = passwordEncoder.encode(userDto.password());
+    public User createUser(final User user) {
+        final String hashedPassword = passwordEncoder.encode(user.getPassword());
 
-        userRepository.findByEmail(userDto.email())
+        userRepository.findByEmail(user.getEmail())
                 .ifPresent(existingUser -> {
                     throw new UserAlreadyExists(existingUser.getEmail());
                 });
 
-        User user = new User(userDto.id(), userDto.email(), hashedPassword);
-        user.getRoles().add(userDto.role());
-        userRepository.save(user);
+        user.setPassword(hashedPassword);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(final UUID id) {
+        userRepository.deleteById(id);
     }
 }
