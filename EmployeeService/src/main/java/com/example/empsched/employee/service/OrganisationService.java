@@ -1,7 +1,11 @@
 package com.example.empsched.employee.service;
 
-import com.example.empsched.shared.dto.OrganisationCreateEvent;
+import com.example.empsched.employee.entity.Organisation;
+
+import java.util.UUID;
 
 public interface OrganisationService {
-    void createOrganisation(OrganisationCreateEvent event);
+    Organisation createOrganisation(final Organisation organisation);
+
+    void deleteOrganisation(final UUID id);
 }

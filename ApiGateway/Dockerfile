@@ -2,6 +2,17 @@ FROM maven:3.9.9-eclipse-temurin-24-alpine AS build
 
 WORKDIR /app
 
+COPY pom.xml .
+COPY ApiGateway/pom.xml ./ApiGateway/
+COPY AuthService/pom.xml ./AuthService/
+COPY CommonShared/pom.xml ./CommonShared/
+COPY EmployeeService/pom.xml ./EmployeeService/
+COPY EurekaDiscovery/pom.xml ./EurekaDiscovery/
+COPY OrganisationService/pom.xml ./OrganisationService/
+COPY WorkflowService/pom.xml ./WorkflowService/
+
+RUN mvn -B dependency:go-offline
+
 COPY . ./
 
 RUN mvn -B -pl ApiGateway -am clean package
