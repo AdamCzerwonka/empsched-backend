@@ -3,7 +3,6 @@ package com.example.empsched.employee.service.impl;
 import com.example.empsched.employee.entity.Organisation;
 import com.example.empsched.employee.repository.OrganisationRepository;
 import com.example.empsched.employee.service.OrganisationService;
-import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

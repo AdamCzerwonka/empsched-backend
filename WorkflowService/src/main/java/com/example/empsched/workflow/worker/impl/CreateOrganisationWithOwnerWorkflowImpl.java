@@ -6,17 +6,14 @@ import com.example.empsched.shared.dto.user.CreateUserRequest;
 import com.example.empsched.shared.entity.Role;
 import com.example.empsched.workflow.activity.CreateActivities;
 import com.example.empsched.workflow.activity.DeleteActivities;
-import com.example.empsched.workflow.exception.ServiceCallException;
 import com.example.empsched.workflow.util.Tasks;
 import com.example.empsched.workflow.worker.CreateOrganisationWithOwnerWorkflow;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.failure.ActivityFailure;
-import io.temporal.failure.ApplicationFailure;
 import io.temporal.spring.boot.WorkflowImpl;
 import io.temporal.workflow.Saga;
 import io.temporal.workflow.Workflow;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Duration;
 import java.util.UUID;
