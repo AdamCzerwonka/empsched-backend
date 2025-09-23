@@ -47,6 +47,6 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 COPY --from=jre-build /app/jre ${JAVA_HOME}
 COPY --from=jre-build /app/app.jar /app/app.jar
 
-EXPOSE 9001
+EXPOSE 9004
 
 CMD ["java", "-jar", "/app/app.jar"]

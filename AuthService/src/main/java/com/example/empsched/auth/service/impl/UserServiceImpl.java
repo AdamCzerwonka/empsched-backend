@@ -4,7 +4,6 @@ import com.example.empsched.auth.entity.User;
 import com.example.empsched.auth.exception.UserAlreadyExists;
 import com.example.empsched.auth.repository.UserRepository;
 import com.example.empsched.auth.service.UserService;
-import com.example.empsched.shared.dto.user.CreateUserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
