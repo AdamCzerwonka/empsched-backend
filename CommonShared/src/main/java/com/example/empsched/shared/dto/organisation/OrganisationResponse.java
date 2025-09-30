@@ -7,7 +7,6 @@ import java.util.UUID;
 public record OrganisationResponse(
         UUID id,
         String name,
-        int maxEmployees,
         UUID ownerId,
         OrganisationPlan plan
 ) {
