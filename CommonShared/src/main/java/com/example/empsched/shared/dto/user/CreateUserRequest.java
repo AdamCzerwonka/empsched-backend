@@ -6,5 +6,5 @@ import lombok.Builder;
 import java.util.UUID;
 
 @Builder
-public record CreateUserRequest(UUID id, String email, String password, Role role) {
+public record CreateUserRequest(UUID id, String email, String password, Role role, UUID organisationId) {
 }

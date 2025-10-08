@@ -2,6 +2,7 @@ package com.example.empsched.organisation.service.impl;
 
 import com.example.empsched.organisation.entity.Organisation;
 import com.example.empsched.organisation.exception.OrganisationAlreadyExistsException;
+import com.example.empsched.organisation.exception.OrganisationNotFoundException;
 import com.example.empsched.organisation.repository.OrganisationRepository;
 import com.example.empsched.organisation.service.OrganisationService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrganisationServiceImpl implements OrganisationService {
     private final OrganisationRepository organisationRepository;
+
+    @Override
+    public Organisation getOrganisation(final UUID organisationId) {
+        return organisationRepository.findById(organisationId)
+                .orElseThrow(() -> new OrganisationNotFoundException(organisationId));
+    }
 
     @Override
     public Organisation createOrganisation(final Organisation organisation) {

@@ -1,10 +1,8 @@
 package com.example.empsched.workflow.activity.impl;
 
-import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
-import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import com.example.empsched.shared.dto.user.CreateUserRequest;
 import com.example.empsched.shared.dto.user.UserResponse;
-import com.example.empsched.workflow.activity.CreateActivities;
+import com.example.empsched.workflow.activity.UserActivities;
 import com.example.empsched.workflow.client.AuthServiceClient;
 import com.example.empsched.workflow.client.EmployeeServiceClient;
 import com.example.empsched.workflow.client.OrganisationServiceClient;
@@ -14,11 +12,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @ActivityImpl(workers = {Tasks.WORKER_CREATE_ORGANISATION})
 @RequiredArgsConstructor
 @Slf4j
-public class CreateActivitiesImpl implements CreateActivities {
+public class UserActivitiesImpl implements UserActivities {
     private final AuthServiceClient authServiceClient;
     private final EmployeeServiceClient employeeServiceClient;
     private final OrganisationServiceClient organisationServiceClient;
@@ -29,12 +29,9 @@ public class CreateActivitiesImpl implements CreateActivities {
     }
 
     @Override
-    public OrganisationResponse createOrganisationInEmployeeService(final CreateOrganisationRequest request) {
-        return employeeServiceClient.createOrganisation(request).getBody();
+    public void deleteUserInAuthService(final UUID id) {
+        authServiceClient.deleteUser(id);
     }
 
-    @Override
-    public OrganisationResponse createOrganisationInOrganisationService(final CreateOrganisationRequest request) {
-        return organisationServiceClient.createOrganisation(request).getBody();
-    }
+
 }

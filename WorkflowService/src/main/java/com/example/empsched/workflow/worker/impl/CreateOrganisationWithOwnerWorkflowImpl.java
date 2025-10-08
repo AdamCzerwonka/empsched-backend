@@ -4,8 +4,8 @@ import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
 import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerRequest;
 import com.example.empsched.shared.dto.user.CreateUserRequest;
 import com.example.empsched.shared.entity.Role;
-import com.example.empsched.workflow.activity.CreateActivities;
-import com.example.empsched.workflow.activity.DeleteActivities;
+import com.example.empsched.workflow.activity.OrganisationActivities;
+import com.example.empsched.workflow.activity.UserActivities;
 import com.example.empsched.workflow.util.Tasks;
 import com.example.empsched.workflow.worker.CreateOrganisationWithOwnerWorkflow;
 import io.temporal.activity.ActivityOptions;
@@ -22,8 +22,8 @@ import java.util.UUID;
 @WorkflowImpl(workers = Tasks.WORKER_CREATE_ORGANISATION)
 public class CreateOrganisationWithOwnerWorkflowImpl implements CreateOrganisationWithOwnerWorkflow {
 
-    private final CreateActivities createActivities = Workflow.newActivityStub(
-            CreateActivities.class,
+    private final OrganisationActivities organisationActivities = Workflow.newActivityStub(
+            OrganisationActivities.class,
             ActivityOptions.newBuilder()
                     .setStartToCloseTimeout(Duration.ofSeconds(10))
                     .setRetryOptions(io.temporal.common.RetryOptions.newBuilder()
@@ -34,8 +34,8 @@ public class CreateOrganisationWithOwnerWorkflowImpl implements CreateOrganisati
                     .build()
     );
 
-    private final DeleteActivities deleteActivities = Workflow.newActivityStub(
-            DeleteActivities.class,
+    private final UserActivities userActivities = Workflow.newActivityStub(
+            UserActivities.class,
             ActivityOptions.newBuilder()
                     .setStartToCloseTimeout(Duration.ofSeconds(10))
                     .build()
@@ -47,32 +47,37 @@ public class CreateOrganisationWithOwnerWorkflowImpl implements CreateOrganisati
                 .setParallelCompensation(true)
                 .build());
 
+        final UUID userId = UUID.randomUUID();
+        final UUID organisationId = UUID.randomUUID();
+
         final CreateUserRequest createUserRequest = CreateUserRequest
                 .builder()
-                .id(UUID.randomUUID())
+                .id(userId)
+                .organisationId(organisationId)
                 .email(request.email())
                 .password(request.password())
                 .role(Role.ORGANISATION_ADMIN).build();
 
         final CreateOrganisationRequest createOrganisationRequest = CreateOrganisationRequest
                 .builder()
-                .id(UUID.randomUUID())
+                .id(organisationId)
                 .name(request.name())
-                .ownerId(createUserRequest.id())
+                .ownerId(userId)
                 .plan(request.plan())
                 .build();
 
         try {
-            saga.addCompensation(() -> deleteActivities.deleteOrganisationInOrganisationService(createOrganisationRequest.id()));
-            createActivities.createOrganisationInOrganisationService(createOrganisationRequest);
-            saga.addCompensation(() -> deleteActivities.deleteUserInAuthService(createUserRequest.id()));
-            createActivities.createUserInAuthService(createUserRequest);
-            saga.addCompensation(() -> deleteActivities.deleteOrganisationInEmployeeService(createOrganisationRequest.id()));
-            createActivities.createOrganisationInEmployeeService(createOrganisationRequest);
-            log.info("Organisation with owner creation completed successfully.");
+            saga.addCompensation(() -> organisationActivities.deleteOrganisationInOrganisationService(createOrganisationRequest.id()));
+            organisationActivities.createOrganisationInOrganisationService(createOrganisationRequest);
+
+            saga.addCompensation(() -> userActivities.deleteUserInAuthService(createUserRequest.id()));
+            userActivities.createUserInAuthService(createUserRequest);
+
+            saga.addCompensation(() -> organisationActivities.deleteOrganisationInEmployeeService(createOrganisationRequest.id()));
+            organisationActivities.createOrganisationInEmployeeService(createOrganisationRequest);
+            log.info("Organisation with owner created successfully with Organisation ID: {} and User ID: {}", organisationId, userId);
         } catch (ActivityFailure e) {
             log.error("Organisation with owner creation failed: {}", e.getMessage());
-            log.error("Starting compensation transactions.");
             saga.compensate();
             throw e;
         }

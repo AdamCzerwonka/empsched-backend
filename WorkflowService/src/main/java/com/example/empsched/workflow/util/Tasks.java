@@ -7,4 +7,7 @@ import lombok.NoArgsConstructor;
 public class Tasks {
     public static final String WORKER_CREATE_ORGANISATION = "create-organisation-worker";
     public static final String TASK_QUEUE_CREATE_ORGANISATION = "TASK_QUEUE_CREATE_ORGANISATION";
+
+    public static final String WORKER_POSITION_MANAGEMENT = "position-management-worker";
+    public static final String TASK_QUEUE_POSITION_MANAGEMENT = "TASK_QUEUE_POSITION_MANAGEMENT";
 }
