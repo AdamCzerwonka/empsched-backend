@@ -1,11 +1,13 @@
 package com.example.empsched.workflow.client;
 
+import com.example.empsched.workflow.util.RequestContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.temporal.failure.ApplicationFailure;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -28,10 +30,18 @@ public class ServiceClient {
     @Value("${services.employee.url}")
     private String employeeServiceUrl;
 
+
     public <T, R> ResponseEntity<R> sendRequest(final ServiceType service, final String path, final HttpMethod method, final T payload, final Class<R> responseType) {
+        return sendRequest(service, path, method, payload, responseType, null);
+    }
+
+    public <T, R> ResponseEntity<R> sendRequest(final ServiceType service, final String path, final HttpMethod method, final T payload, final Class<R> responseType, final RequestContext requestContext) {
         final String serviceUrl = getServiceUrl(service);
         final String url = serviceUrl + path;
-        final HttpEntity<T> requestEntity = new HttpEntity<>(payload);
+
+        final HttpHeaders headers = prepareHeaders(requestContext);
+        final HttpEntity<T> requestEntity = new HttpEntity<>(payload, headers);
+
         try {
             return restTemplate.exchange(url, method, requestEntity, responseType);
         } catch (HttpStatusCodeException e) {
@@ -44,6 +54,16 @@ public class ServiceClient {
                     responseBody
             );
         }
+    }
+
+    private HttpHeaders prepareHeaders(final RequestContext requestContext) {
+        final HttpHeaders headers = new HttpHeaders();
+        if (requestContext != null) {
+            if (requestContext.getAuthorizationHeader() != null) {
+                headers.set(HttpHeaders.AUTHORIZATION, requestContext.getAuthorizationHeader());
+            }
+        }
+        return headers;
     }
 
     private String getServiceUrl(final ServiceType service) {

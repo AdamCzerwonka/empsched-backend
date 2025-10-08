@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +22,13 @@ public class JwtServiceImpl implements JwtService {
     private int tokenExpirationTime;
 
     @Override
-    public String generateToken(final String email, final List<Role> roles) {
+    public String generateToken(final String email, final UUID organisationId, final List<Role> roles) {
         JwtEncoderParameters params = JwtEncoderParameters.from(
                 JwtClaimsSet.builder()
                         .subject(email)
                         .expiresAt(Instant.now().plusSeconds(tokenExpirationTime))
                         .claim("roles", roles.stream().map(Role::getName).toList())
+                        .claim("organisationId", organisationId)
                         .build()
         );
         return jwtEncoder.encode(params).getTokenValue();

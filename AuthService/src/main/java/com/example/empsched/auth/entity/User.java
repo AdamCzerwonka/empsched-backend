@@ -21,8 +21,14 @@ import java.util.UUID;
 })
 @AllArgsConstructor
 public class User extends AbstractEntity {
+    @Column(name="email", nullable = false, unique = true)
     private String email;
+
+    @Column(name="password", nullable = false)
     private String password;
+
+    @Column(name="organisation_id", nullable = false)
+    private UUID organisationId;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -30,10 +36,11 @@ public class User extends AbstractEntity {
     @Column(name = "role", nullable = false)
     private List<Role> roles = new ArrayList<>();
 
-    public User(UUID id, String email, String password) {
+    public User(UUID id, String email, String password, UUID organisationId) {
         super(id);
         this.email = email;
         this.password = password;
+        this.organisationId = organisationId;
     }
 
     @Override
