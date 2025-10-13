@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -29,8 +30,13 @@ public class Employee extends AbstractEntity {
     @Column(name = "phone_number", length = 15)
     private String phoneNumber;
 
-    @Column(name = "position", length = 50)
-    private String position;
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "position_id"),
+            uniqueConstraints = @UniqueConstraint(name = "uk_employee_position", columnNames = {"employee_id", "position_id"})
+    )
+    private Set<Position> positions;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Organisation organisation;

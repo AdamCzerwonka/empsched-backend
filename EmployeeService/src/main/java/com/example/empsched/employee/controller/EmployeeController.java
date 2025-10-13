@@ -1,25 +1,48 @@
 package com.example.empsched.employee.controller;
 
-import com.example.empsched.employee.dto.CreateEmployeeRequest;
+import com.example.empsched.employee.entity.Employee;
+import com.example.empsched.employee.mapper.DtoMapper;
 import com.example.empsched.employee.service.EmployeeService;
+import com.example.empsched.shared.dto.employee.CreateEmployeeRequest;
+import com.example.empsched.shared.dto.employee.EmployeeResponse;
+import com.example.empsched.shared.utils.CredentialsExtractor;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
 public class EmployeeController {
-
     private final EmployeeService employeeService;
+    private final DtoMapper mapper;
+
+    @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    public ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
+        final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
+        final List<Employee> employees = employeeService.getAllEmployees(organisationId);
+        return ResponseEntity.ok(employees.stream().map(mapper::mapToEmployeeResponse).toList());
+    }
 
     @PostMapping
-    public ResponseEntity<Void> createEmployee(@RequestBody @Valid CreateEmployeeRequest request) {
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    public ResponseEntity<EmployeeResponse> createEmployee(@RequestBody @Valid CreateEmployeeRequest request) {
+        final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
+        final Employee employee = employeeService.createEmployee(mapper.mapToEmployee(request), organisationId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToEmployeeResponse(employee));
+    }
 
-        employeeService.createEmployee(request.email(), request.password());
-        // Logic to create an employee
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/{employeeId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable final UUID employeeId) {
+        final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
+        employeeService.deleteEmployee(employeeId, organisationId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

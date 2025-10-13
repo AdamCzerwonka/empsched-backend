@@ -11,4 +11,8 @@ public enum OrganisationPlan {
     OrganisationPlan(int maxEmployees) {
         this.maxEmployees = maxEmployees;
     }
+
+    public int getMaxEmployees() {
+        return maxEmployees;
+    }
 }

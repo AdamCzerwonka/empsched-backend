@@ -11,6 +11,8 @@ spring:
         task-queue: TASK_QUEUE_CREATE_ORGANISATION
       - name: position-management-worker
         task-queue: TASK_QUEUE_POSITION_MANAGEMENT
+      - name: employee-management-worker
+        task-queue: TASK_QUEUE_EMPLOYEE_MANAGEMENT
     workers-auto-discovery:
       packages:
         - com.example.empsched.workflow.worker
