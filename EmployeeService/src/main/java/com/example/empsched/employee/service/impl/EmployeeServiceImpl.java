@@ -1,25 +1,47 @@
 package com.example.empsched.employee.service.impl;
 
+import com.example.empsched.employee.entity.Employee;
+import com.example.empsched.employee.entity.Organisation;
+import com.example.empsched.employee.exception.EmployeeLimitReachedException;
+import com.example.empsched.employee.exception.OrganisationNotFoundException;
+import com.example.empsched.employee.repository.EmployeeRepository;
+import com.example.empsched.employee.repository.OrganisationRepository;
 import com.example.empsched.employee.service.EmployeeService;
-import com.example.empsched.shared.dto.user.CreateUserRequest;
-import com.example.empsched.shared.entity.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
+    private final EmployeeRepository employeeRepository;
+    private final OrganisationRepository organisationRepository;
 
     @Override
-    public void createEmployee(String email, String password) {
-        UUID uuid = UUID.randomUUID();
-        CreateUserRequest createUserRequest = CreateUserRequest.builder()
-                .id(uuid)
-                .email(email)
-                .password(password)
-                .role(Role.ORGANISATION_EMPLOYEE)
-                .build();
+    public List<Employee> getAllEmployees(UUID organisationId) {
+        return employeeRepository.findAllByOrganisationId(organisationId);
+    }
+
+    @Override
+    public Employee createEmployee(final Employee employee, final UUID organisationId) {
+        final Organisation organisation = organisationRepository.findById(organisationId)
+                .orElseThrow(() -> new OrganisationNotFoundException(organisationId));
+
+        final int maxEmployees = organisation.getPlan().getMaxEmployees();
+        final int currentEmployeeCount = employeeRepository.countByOrganisationId(organisationId);
+
+        if (currentEmployeeCount >= maxEmployees) {
+            throw new EmployeeLimitReachedException(organisation.getId(), maxEmployees);
+        }
+
+        employee.setOrganisation(organisation);
+        return employeeRepository.save(employee);
+    }
+
+    @Override
+    public void deleteEmployee(UUID employeeId, UUID organisationId) {
+        employeeRepository.deleteByIdAndOrganisationId(employeeId, organisationId);
     }
 }

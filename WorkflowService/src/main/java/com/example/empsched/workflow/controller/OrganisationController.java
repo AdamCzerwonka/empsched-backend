@@ -1,6 +1,7 @@
 package com.example.empsched.workflow.controller;
 
 import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerRequest;
+import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import com.example.empsched.workflow.util.Tasks;
 import com.example.empsched.workflow.worker.CreateOrganisationWithOwnerWorkflow;
 import io.temporal.client.WorkflowClient;
@@ -25,15 +26,15 @@ public class OrganisationController {
     private final WorkflowClient client;
 
     @PostMapping()
-    public ResponseEntity<Void> create(@RequestBody @Valid final CreateOrganisationWithOwnerRequest request) {
+    public ResponseEntity<OrganisationResponse> create(@RequestBody @Valid final CreateOrganisationWithOwnerRequest request) {
         final WorkflowOptions options = WorkflowOptions.newBuilder()
                 .setWorkflowId(UUID.randomUUID().toString())
                 .setTaskQueue(Tasks.TASK_QUEUE_CREATE_ORGANISATION)
                 .build();
 
         final CreateOrganisationWithOwnerWorkflow workflow = client.newWorkflowStub(CreateOrganisationWithOwnerWorkflow.class, options);
-        workflow.create(request);
+        final OrganisationResponse organisationResponse = workflow.create(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(organisationResponse);
     }
 }

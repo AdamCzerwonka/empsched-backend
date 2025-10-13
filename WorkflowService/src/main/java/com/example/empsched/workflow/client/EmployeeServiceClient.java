@@ -1,5 +1,7 @@
 package com.example.empsched.workflow.client;
 
+import com.example.empsched.shared.dto.employee.CreateEmployeeRequest;
+import com.example.empsched.shared.dto.employee.EmployeeResponse;
 import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
@@ -33,5 +35,13 @@ public class EmployeeServiceClient {
 
     public ResponseEntity<Void> deletePosition(final UUID positionId, final RequestContext context) {
         return serviceClient.sendRequest(SERVICE_TYPE, "/positions/" + positionId, HttpMethod.DELETE, null, Void.class, context);
+    }
+
+    public ResponseEntity<EmployeeResponse> createEmployee(final CreateEmployeeRequest request, final RequestContext context) {
+        return serviceClient.sendRequest(SERVICE_TYPE, "/", HttpMethod.POST, request, EmployeeResponse.class, context);
+    }
+
+    public ResponseEntity<Void> deleteEmployee(final UUID employeeId, final RequestContext context) {
+        return serviceClient.sendRequest(SERVICE_TYPE, "/" + employeeId, HttpMethod.DELETE, null, Void.class, context);
     }
 }

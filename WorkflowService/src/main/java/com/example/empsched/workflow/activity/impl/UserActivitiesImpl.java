@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-@ActivityImpl(workers = {Tasks.WORKER_CREATE_ORGANISATION})
+@ActivityImpl(workers = {Tasks.WORKER_CREATE_ORGANISATION, Tasks.WORKER_EMPLOYEE_MANAGEMENT})
 @RequiredArgsConstructor
 @Slf4j
 public class UserActivitiesImpl implements UserActivities {

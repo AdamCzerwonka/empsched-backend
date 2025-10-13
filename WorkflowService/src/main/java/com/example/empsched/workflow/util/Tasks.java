@@ -10,4 +10,7 @@ public class Tasks {
 
     public static final String WORKER_POSITION_MANAGEMENT = "position-management-worker";
     public static final String TASK_QUEUE_POSITION_MANAGEMENT = "TASK_QUEUE_POSITION_MANAGEMENT";
+
+    public static final String WORKER_EMPLOYEE_MANAGEMENT = "employee-management-worker";
+    public static final String TASK_QUEUE_EMPLOYEE_MANAGEMENT = "TASK_QUEUE_EMPLOYEE_MANAGEMENT";
 }
