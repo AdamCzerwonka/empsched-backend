@@ -33,7 +33,6 @@
         <module>ApiGateway</module>
         <module>CommonShared</module>
         <module>OrganisationService</module>
-        <module>WorkflowService</module>
     </modules>
 
     <dependencyManagement>

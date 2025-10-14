@@ -15,6 +15,20 @@ spring:
     username: ${DATASOURCE_ORGANISATION_USERNAME}
     password: ${DATASOURCE_ORGANISATION_PASSWORD}
     driver-class-name: org.postgresql.Driver
+  temporal:
+    connection:
+      target: ${TEMPORAL_CONNECTION}
+    workers:
+       - name: organisation-management-worker
+         task-queue: TASK_QUEUE_ORGANISATION_MANAGEMENT
+       - name: position-management-worker
+         task-queue: TASK_QUEUE_POSITION_MANAGEMENT
+    workers-auto-discovery:
+      packages:
+        - com.example.empsched.organisation.workflow
+        - com.example.empsched.organisation.workflow.impl
+        - com.example.empsched.organisation.activity
+        - com.example.empsched.organisation.activity.impl
 eureka:
   client:
     service-url:
@@ -41,3 +55,10 @@ management:
 jwt:
   public:
     key: classpath:certs/public.pem
+services:
+  auth:
+    url: ${USER_SERVICE_URL}
+  organisation:
+    url: ${ORGANISATION_SERVICE_URL}
+  employee:
+    url: ${EMPLOYEE_SERVICE_URL}

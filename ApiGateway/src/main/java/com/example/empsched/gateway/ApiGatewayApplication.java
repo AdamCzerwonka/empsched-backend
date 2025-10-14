@@ -22,12 +22,9 @@ public class ApiGatewayApplication {
                 .route("employee-service", r -> r.path("/employees/**")
                         .filters(f -> f.rewritePath("/employees/(?<segment>.*)", "/${segment}"))
                         .uri("lb://employee-service"))
-                .route("organisation-service", r -> r.path("/organisation/**")
-                        .filters(f -> f.rewritePath("/organisation/(?<segment>.*)", "/${segment}"))
+                .route("organisation-service", r -> r.path("/organisations/**")
+                        .filters(f -> f.rewritePath("/organisations/(?<segment>.*)", "/${segment}"))
                         .uri("lb://organisation-service"))
-                .route("workflow-service", r -> r.path("/workflow/**")
-                        .filters(f -> f.rewritePath("/workflow/(?<segment>.*)", "/${segment}"))
-                        .uri("lb://workflow-service"))
                 .build();
     }
 }

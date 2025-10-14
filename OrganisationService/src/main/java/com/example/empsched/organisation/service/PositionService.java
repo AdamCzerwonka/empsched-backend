@@ -10,5 +10,5 @@ public interface PositionService {
 
     Position createPosition(final Position position, final UUID organisationId);
 
-    void deletePosition(final UUID callerOrganisationId, final UUID positionId);
+    void deletePosition(final UUID positionId, final UUID callerOrganisationId);
 }

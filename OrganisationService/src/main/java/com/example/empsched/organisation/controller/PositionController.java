@@ -3,9 +3,14 @@ package com.example.empsched.organisation.controller;
 import com.example.empsched.organisation.entity.Position;
 import com.example.empsched.organisation.mapper.DtoMapper;
 import com.example.empsched.organisation.service.PositionService;
+import com.example.empsched.organisation.util.WorkflowTasks;
+import com.example.empsched.organisation.workflow.CreatePositionWorkflow;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
 import com.example.empsched.shared.dto.position.PositionResponse;
 import com.example.empsched.shared.utils.CredentialsExtractor;
+import com.example.empsched.shared.utils.RequestContext;
+import io.temporal.client.WorkflowClient;
+import io.temporal.client.WorkflowOptions;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +25,7 @@ import java.util.UUID;
 @RequestMapping("/positions")
 @RequiredArgsConstructor
 public class PositionController {
+    private final WorkflowClient client;
     private final PositionService positionService;
     private final DtoMapper mapper;
 
@@ -34,8 +40,13 @@ public class PositionController {
     @PostMapping()
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<PositionResponse> createPosition(@RequestBody @Valid final CreatePositionRequest request) {
-        final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
-        final Position position = positionService.createPosition(mapper.mapToPosition(request), organisationId);
+        final WorkflowOptions options = WorkflowOptions.newBuilder()
+                .setWorkflowId(UUID.randomUUID().toString())
+                .setTaskQueue(WorkflowTasks.TASK_QUEUE_POSITION_MANAGEMENT)
+                .build();
+
+        final CreatePositionWorkflow workflow = client.newWorkflowStub(CreatePositionWorkflow.class, options);
+        final Position position = workflow.create(request, new RequestContext());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToPositionResponse(position));
     }
@@ -44,7 +55,7 @@ public class PositionController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<Void> deletePosition(@PathVariable final UUID positionId) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
-        positionService.deletePosition(organisationId, positionId);
+        positionService.deletePosition(positionId, organisationId);
         return ResponseEntity.noContent().build();
     }
 }

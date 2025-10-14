@@ -1,8 +1,14 @@
 package com.example.empsched.employee;
 
+import com.example.empsched.shared.client.AuthServiceClient;
+import com.example.empsched.shared.client.OrganisationServiceClient;
+import com.example.empsched.shared.client.ServiceClient;
 import com.example.empsched.shared.configuration.BaseSecurityConfig;
 import com.example.empsched.shared.configuration.ObservationConfig;
+import com.example.empsched.shared.configuration.RestConfig;
 import com.example.empsched.shared.exception.GenericErrorHandler;
+import io.temporal.client.WorkflowClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
@@ -11,9 +17,16 @@ import org.springframework.context.annotation.Import;
 @Import({
         GenericErrorHandler.class,
         ObservationConfig.class,
-        BaseSecurityConfig.class
+        BaseSecurityConfig.class,
+        RestConfig.class,
+        ServiceClient.class,
+        OrganisationServiceClient.class,
+        AuthServiceClient.class
 })
+@RequiredArgsConstructor
 public class EmployeeServiceApplication {
+    private final WorkflowClient workflowClient;
+
     public static void main(String[] args) {
         SpringApplication.run(EmployeeServiceApplication.class, args);
     }
