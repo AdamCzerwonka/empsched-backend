@@ -1,8 +1,6 @@
 package com.example.empsched.shared.client;
 
 import com.example.empsched.shared.utils.RequestContext;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.temporal.failure.ApplicationFailure;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -19,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class ServiceClient {
     private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
 
     @Value("${services.auth.url}")
     private String authServiceUrl;
@@ -42,18 +38,7 @@ public class ServiceClient {
         final HttpHeaders headers = prepareHeaders(requestContext);
         final HttpEntity<T> requestEntity = new HttpEntity<>(payload, headers);
 
-        try {
-            return restTemplate.exchange(url, method, requestEntity, responseType);
-        } catch (HttpStatusCodeException e) {
-            final int responseStatus = e.getStatusCode().value();
-            final String responseBody = e.getResponseBodyAsString();
-            throw ApplicationFailure.newNonRetryableFailure(
-                    String.format("Service call to %s failed. Status: %s Message: %s", service, responseStatus, responseBody),
-                    "",
-                    responseStatus,
-                    responseBody
-            );
-        }
+        return restTemplate.exchange(url, method, requestEntity, responseType);
     }
 
     private HttpHeaders prepareHeaders(final RequestContext requestContext) {

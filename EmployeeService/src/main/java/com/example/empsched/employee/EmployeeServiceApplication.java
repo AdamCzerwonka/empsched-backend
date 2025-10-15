@@ -1,5 +1,6 @@
 package com.example.empsched.employee;
 
+import com.example.empsched.shared.aspect.ActivityErrorHandlingAspect;
 import com.example.empsched.shared.client.AuthServiceClient;
 import com.example.empsched.shared.client.OrganisationServiceClient;
 import com.example.empsched.shared.client.ServiceClient;
@@ -11,6 +12,7 @@ import io.temporal.client.WorkflowClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
@@ -21,9 +23,11 @@ import org.springframework.context.annotation.Import;
         RestConfig.class,
         ServiceClient.class,
         OrganisationServiceClient.class,
-        AuthServiceClient.class
+        AuthServiceClient.class,
+        ActivityErrorHandlingAspect.class
 })
 @RequiredArgsConstructor
+@EnableAspectJAutoProxy
 public class EmployeeServiceApplication {
     private final WorkflowClient workflowClient;
 

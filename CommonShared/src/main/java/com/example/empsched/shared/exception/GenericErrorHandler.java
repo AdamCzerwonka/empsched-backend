@@ -15,9 +15,7 @@ public class GenericErrorHandler {
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<Problem> handleApplicationException(ApplicationException ex) {
         log.error(ex.getMessage(), ex);
-
         Problem problem = new Problem(ex.getMessage(), ex.getMessageKey());
-
         return ResponseEntity.status(ex.getStatusCode()).body(problem);
     }
 
