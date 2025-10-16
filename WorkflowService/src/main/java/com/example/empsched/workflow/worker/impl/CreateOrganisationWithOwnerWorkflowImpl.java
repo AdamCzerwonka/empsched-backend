@@ -58,8 +58,8 @@ public class CreateOrganisationWithOwnerWorkflowImpl implements CreateOrganisati
                 .builder()
                 .id(UUID.randomUUID())
                 .name(request.name())
-                .maxEmployees(request.maxEmployees())
                 .ownerId(createUserRequest.id())
+                .plan(request.plan())
                 .build();
 
         try {

@@ -1,6 +1,8 @@
 package com.example.empsched.employee.entity;
 
 import com.example.empsched.shared.entity.AbstractEntity;
+import com.example.empsched.shared.entity.OrganisationPlan;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,11 +17,12 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class Organisation extends AbstractEntity {
-    private int maxEmployees;
+    @Column(name = "plan", nullable = false)
+    private OrganisationPlan plan;
 
-    public Organisation(UUID id, int maxEmployees) {
+    public Organisation(UUID id, OrganisationPlan plan) {
         super(id);
-        this.maxEmployees = maxEmployees;
+        this.plan = plan;
     }
 
     @Override

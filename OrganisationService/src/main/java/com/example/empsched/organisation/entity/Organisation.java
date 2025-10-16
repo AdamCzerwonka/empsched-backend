@@ -1,10 +1,8 @@
 package com.example.empsched.organisation.entity;
 
 import com.example.empsched.shared.entity.AbstractEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import com.example.empsched.shared.entity.OrganisationPlan;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,17 +22,18 @@ public class Organisation extends AbstractEntity {
     @Column(name = "name", unique = true, nullable = false, length = 100)
     private String name;
 
-    @Column(name = "max_employees", nullable = false)
-    private int maxEmployees;
-
     @Column(name = "owner_id", nullable = false)
     private UUID ownerId;
 
-    public Organisation(String name, int maxEmployees, UUID ownerId) {
+    @Column(name = "plan", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrganisationPlan plan;
+
+    public Organisation(String name, UUID ownerId, OrganisationPlan plan) {
         super(UUID.randomUUID());
         this.name = name;
-        this.maxEmployees = maxEmployees;
         this.ownerId = ownerId;
+        this.plan = plan;
     }
 
     @Override
