@@ -2,10 +2,14 @@ package com.example.empsched.organisation.controller;
 
 import com.example.empsched.organisation.entity.Organisation;
 import com.example.empsched.organisation.mapper.DtoMapper;
-import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
+import com.example.empsched.organisation.util.WorkflowTasks;
+import com.example.empsched.organisation.workflow.CreateOrganisationWithOwnerWorkflow;
 import com.example.empsched.organisation.service.OrganisationService;
+import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerRequest;
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import com.example.empsched.shared.utils.CredentialsExtractor;
+import io.temporal.client.WorkflowClient;
+import io.temporal.client.WorkflowOptions;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +24,7 @@ import java.util.UUID;
 public class OrganisationController {
     private final OrganisationService organisationService;
     private final DtoMapper mapper;
+    private final WorkflowClient client;
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
@@ -30,8 +35,14 @@ public class OrganisationController {
     }
 
     @PostMapping
-    public ResponseEntity<OrganisationResponse> createOrganisation(@RequestBody @Valid final CreateOrganisationRequest request) {
-        final Organisation organisation = organisationService.createOrganisation(mapper.mapToOrganisation(request));
+    public ResponseEntity<OrganisationResponse> createOrganisation(@RequestBody @Valid final CreateOrganisationWithOwnerRequest request) {
+        final WorkflowOptions options = WorkflowOptions.newBuilder()
+                .setWorkflowId(UUID.randomUUID().toString())
+                .setTaskQueue(WorkflowTasks.TASK_QUEUE_ORGANISATION_MANAGEMENT)
+                .build();
+
+        final CreateOrganisationWithOwnerWorkflow workflow = client.newWorkflowStub(CreateOrganisationWithOwnerWorkflow.class, options);
+        final Organisation organisation = workflow.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToOrganisationResponse(organisation));
     }
 

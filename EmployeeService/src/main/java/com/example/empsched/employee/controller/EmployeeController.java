@@ -3,9 +3,14 @@ package com.example.empsched.employee.controller;
 import com.example.empsched.employee.entity.Employee;
 import com.example.empsched.employee.mapper.DtoMapper;
 import com.example.empsched.employee.service.EmployeeService;
+import com.example.empsched.employee.util.WorkflowTasks;
+import com.example.empsched.employee.workflow.CreateEmployeeWorkflow;
 import com.example.empsched.shared.dto.employee.CreateEmployeeRequest;
 import com.example.empsched.shared.dto.employee.EmployeeResponse;
 import com.example.empsched.shared.utils.CredentialsExtractor;
+import com.example.empsched.shared.utils.RequestContext;
+import io.temporal.client.WorkflowClient;
+import io.temporal.client.WorkflowOptions;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +26,7 @@ import java.util.UUID;
 public class EmployeeController {
     private final EmployeeService employeeService;
     private final DtoMapper mapper;
+    private final WorkflowClient client;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
@@ -33,8 +39,13 @@ public class EmployeeController {
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<EmployeeResponse> createEmployee(@RequestBody @Valid CreateEmployeeRequest request) {
-        final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
-        final Employee employee = employeeService.createEmployee(mapper.mapToEmployee(request), organisationId);
+        final WorkflowOptions options = WorkflowOptions.newBuilder()
+                .setWorkflowId(UUID.randomUUID().toString())
+                .setTaskQueue(WorkflowTasks.TASK_QUEUE_EMPLOYEE_MANAGEMENT)
+                .build();
+
+        final CreateEmployeeWorkflow workflow = client.newWorkflowStub(CreateEmployeeWorkflow.class, options);
+        final Employee employee = workflow.createEmployee(request, new RequestContext());
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToEmployeeResponse(employee));
     }
 

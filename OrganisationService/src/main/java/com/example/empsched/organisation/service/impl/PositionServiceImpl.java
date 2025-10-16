@@ -22,12 +22,12 @@ public class PositionServiceImpl implements PositionService {
     private final OrganisationRepository organisationRepository;
 
     @Override
-    public List<Position> getOrganisationPositions(UUID organisationId) {
+    public List<Position> getOrganisationPositions(final UUID organisationId) {
         return positionRepository.findAllByOrganisationId(organisationId);
     }
 
     @Override
-    public Position createPosition(Position position, UUID organisationId) {
+    public Position createPosition(final Position position, final UUID organisationId) {
         final Organisation organisation = organisationRepository.findById(organisationId)
                 .orElseThrow(() -> new OrganisationNotFoundException(organisationId));
         positionRepository.findByNameAndOrganisationId(position.getName(), organisationId)
@@ -39,8 +39,8 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public void deletePosition(UUID callerOrganisationId, UUID positionId) {
-        Optional<Position> position = positionRepository.findById(positionId);
+    public void deletePosition(final UUID positionId, final UUID callerOrganisationId) {
+        final Optional<Position> position = positionRepository.findById(positionId);
         if (position.isEmpty()) return;
         // TODO add checks for linked employees (?)
         BaseThrowChecks.throwIfNotRelated(callerOrganisationId, position.get().getOrganisation().getId());

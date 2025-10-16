@@ -73,21 +73,6 @@ services:
     depends_on:
       - eureka
 
-  workflow:
-    build:
-      context: ..
-      dockerfile: WorkflowService/Dockerfile
-    container_name: workflow
-    restart: always
-    ports:
-      - "${WORKFLOW_APP_MAPPED_PORT}:${WORKFLOW_APP_PORT}"
-    env_file:
-      - .env.services
-    networks:
-      - empsched-backend-network
-    depends_on:
-      - eureka
-
 networks:
   empsched-backend-network:
     external: true
