@@ -1,6 +1,5 @@
 package com.example.empsched.shared.dto.organisation;
 
-import com.example.empsched.shared.entity.OrganisationPlan;
 import jakarta.validation.constraints.*;
 
 public record CreateOrganisationWithOwnerRequest(
