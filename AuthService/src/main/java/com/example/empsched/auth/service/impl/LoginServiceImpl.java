@@ -8,9 +8,12 @@ import com.example.empsched.auth.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class LoginServiceImpl implements LoginService {
     private final JwtService jwtService;
     private final UserRepository userRepository;

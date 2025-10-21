@@ -9,12 +9,15 @@ import com.example.empsched.employee.service.PositionService;
 import com.example.empsched.shared.utils.BaseThrowChecks;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class PositionServiceImpl implements PositionService {
     private final PositionRepository positionRepository;
     private final OrganisationRepository organisationRepository;
