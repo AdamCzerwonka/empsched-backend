@@ -7,11 +7,14 @@ import com.example.empsched.organisation.repository.OrganisationRepository;
 import com.example.empsched.organisation.service.OrganisationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class OrganisationServiceImpl implements OrganisationService {
     private final OrganisationRepository organisationRepository;
 

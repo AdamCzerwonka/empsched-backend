@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/positions")
 @RequiredArgsConstructor
+@Transactional(propagation = Propagation.NEVER)
 public class PositionController {
     private final WorkflowClient client;
     private final PositionService positionService;
