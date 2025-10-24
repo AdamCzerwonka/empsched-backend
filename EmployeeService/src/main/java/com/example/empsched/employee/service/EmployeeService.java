@@ -1,12 +1,13 @@
 package com.example.empsched.employee.service;
 
 import com.example.empsched.employee.entity.Employee;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface EmployeeService {
-    List<Employee> getAllEmployees(final UUID organisationId);
+    Page<Employee> getAllEmployees(final UUID organisationId, final Pageable pageable);
 
     Employee createEmployee(final Employee employee, final UUID organisationId);
 

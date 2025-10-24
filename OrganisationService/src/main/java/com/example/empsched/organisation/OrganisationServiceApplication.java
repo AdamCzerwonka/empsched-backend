@@ -5,6 +5,7 @@ import com.example.empsched.shared.client.AuthServiceClient;
 import com.example.empsched.shared.client.EmployeeServiceClient;
 import com.example.empsched.shared.client.ServiceClient;
 import com.example.empsched.shared.configuration.BaseSecurityConfig;
+import com.example.empsched.shared.configuration.MapperConfiguration;
 import com.example.empsched.shared.configuration.ObservationConfig;
 import com.example.empsched.shared.configuration.RestConfig;
 import com.example.empsched.shared.exception.GenericErrorHandler;
@@ -24,7 +25,8 @@ import org.springframework.context.annotation.Import;
         ServiceClient.class,
         EmployeeServiceClient.class,
         AuthServiceClient.class,
-        ActivityErrorHandlingAspect.class
+        ActivityErrorHandlingAspect.class,
+        MapperConfiguration.class
 })
 @RequiredArgsConstructor
 @EnableAspectJAutoProxy

@@ -5,14 +5,20 @@ import com.example.empsched.organisation.mapper.DtoMapper;
 import com.example.empsched.organisation.service.PositionService;
 import com.example.empsched.organisation.util.WorkflowTasks;
 import com.example.empsched.organisation.workflow.CreatePositionWorkflow;
+import com.example.empsched.shared.dto.page.FilterRequest;
+import com.example.empsched.shared.dto.page.PagedResponse;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
 import com.example.empsched.shared.dto.position.PositionResponse;
+import com.example.empsched.shared.mapper.BaseMapper;
 import com.example.empsched.shared.utils.CredentialsExtractor;
 import com.example.empsched.shared.utils.RequestContext;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +26,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,13 +36,18 @@ public class PositionController {
     private final WorkflowClient client;
     private final PositionService positionService;
     private final DtoMapper mapper;
+    private final BaseMapper baseMapper;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
-    public ResponseEntity<List<PositionResponse>> getOrganisationPositions() {
+    public ResponseEntity<PagedResponse<PositionResponse>> getOrganisationPositions(final FilterRequest filterRequest) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
-        final List<Position> positions = positionService.getOrganisationPositions(organisationId);
-        return ResponseEntity.status(HttpStatus.OK).body(positions.stream().map(mapper::mapToPositionResponse).toList());
+        final Pageable pageable = baseMapper.mapToPageable(
+                filterRequest,
+                Sort.by("name").descending());
+
+        final Page<Position> positionsPage = positionService.getOrganisationPositions(organisationId, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(baseMapper.mapToPagedResponse(positionsPage, mapper::mapToPositionResponse));
     }
 
     @PostMapping()

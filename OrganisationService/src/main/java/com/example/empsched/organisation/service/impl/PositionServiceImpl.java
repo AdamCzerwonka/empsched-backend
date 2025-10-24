@@ -9,11 +9,12 @@ import com.example.empsched.organisation.repository.PositionRepository;
 import com.example.empsched.organisation.service.PositionService;
 import com.example.empsched.shared.utils.BaseThrowChecks;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,8 +26,8 @@ public class PositionServiceImpl implements PositionService {
     private final OrganisationRepository organisationRepository;
 
     @Override
-    public List<Position> getOrganisationPositions(final UUID organisationId) {
-        return positionRepository.findAllByOrganisationId(organisationId);
+    public Page<Position> getOrganisationPositions(final UUID organisationId, final Pageable pageable) {
+        return positionRepository.findAllByOrganisationId(organisationId, pageable);
     }
 
     @Override

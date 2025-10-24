@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/organisations")
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.NEVER)
 public class OrganisationController {
