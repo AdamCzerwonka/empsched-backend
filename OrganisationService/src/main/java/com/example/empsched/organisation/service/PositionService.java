@@ -1,12 +1,13 @@
 package com.example.empsched.organisation.service;
 
 import com.example.empsched.organisation.entity.Position;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface PositionService {
-    List<Position> getOrganisationPositions(final UUID organisationId);
+    Page<Position> getOrganisationPositions(final UUID organisationId, final Pageable pageable);
 
     Position createPosition(final Position position, final UUID organisationId);
 

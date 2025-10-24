@@ -8,11 +8,12 @@ import com.example.empsched.employee.repository.EmployeeRepository;
 import com.example.empsched.employee.repository.OrganisationRepository;
 import com.example.empsched.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -23,8 +24,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final OrganisationRepository organisationRepository;
 
     @Override
-    public List<Employee> getAllEmployees(UUID organisationId) {
-        return employeeRepository.findAllByOrganisationId(organisationId);
+    public Page<Employee> getAllEmployees(final UUID organisationId, final Pageable pageable) {
+        return employeeRepository.findAllByOrganisationId(organisationId, pageable);
     }
 
     @Override
