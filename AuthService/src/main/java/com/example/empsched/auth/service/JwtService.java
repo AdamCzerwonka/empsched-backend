@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface JwtService {
-    String generateToken(String email, UUID organisationId, List<Role> roles);
+    String generateToken(final UUID id, final String email, final UUID organisationId, final List<Role> roles);
 }

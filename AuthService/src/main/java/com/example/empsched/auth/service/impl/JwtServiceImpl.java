@@ -22,13 +22,14 @@ public class JwtServiceImpl implements JwtService {
     private int tokenExpirationTime;
 
     @Override
-    public String generateToken(final String email, final UUID organisationId, final List<Role> roles) {
+    public String generateToken(final UUID id, final String email, final UUID organisationId, final List<Role> roles) {
         JwtEncoderParameters params = JwtEncoderParameters.from(
                 JwtClaimsSet.builder()
-                        .subject(email)
+                        .subject(id.toString())
                         .expiresAt(Instant.now().plusSeconds(tokenExpirationTime))
-                        .claim("roles", roles.stream().map(Role::getName).toList())
+                        .claim("email", email)
                         .claim("organisationId", organisationId)
+                        .claim("roles", roles.stream().map(Role::getName).toList())
                         .build()
         );
         return jwtEncoder.encode(params).getTokenValue();

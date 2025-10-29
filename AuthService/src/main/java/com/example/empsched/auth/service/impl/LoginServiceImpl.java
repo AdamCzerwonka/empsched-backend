@@ -25,7 +25,7 @@ public class LoginServiceImpl implements LoginService {
                 .orElseThrow(LoginFailedException::new);
 
         if (passwordEncoder.matches(password, user.getPassword())) {
-            return jwtService.generateToken(email, user.getOrganisationId(), user.getRoles());
+            return jwtService.generateToken(user.getId(), email, user.getOrganisationId(), user.getRoles());
         }
 
         throw new LoginFailedException();
