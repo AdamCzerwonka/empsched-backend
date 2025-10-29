@@ -1,5 +1,8 @@
 package com.example.empsched.employee.mapper;
 
+import com.example.empsched.employee.dto.absence.AbsenceResponse;
+import com.example.empsched.employee.dto.absence.CreateAbsenceRequest;
+import com.example.empsched.employee.entity.Absence;
 import com.example.empsched.employee.entity.Employee;
 import com.example.empsched.employee.entity.Organisation;
 import com.example.empsched.employee.entity.Position;
@@ -42,4 +45,8 @@ public interface DtoMapper {
     PositionResponse mapToPositionResponse(Position position);
 
     Position mapToPosition(CreatePositionRequest request);
+
+    Absence mapToAbsence(CreateAbsenceRequest request);
+
+    AbsenceResponse mapToAbsenceResponse(Absence absence);
 }
