@@ -1,9 +1,10 @@
 package com.example.empsched.employee.controller;
 
+import com.example.empsched.employee.entity.Employee;
 import com.example.empsched.employee.entity.Organisation;
 import com.example.empsched.employee.mapper.DtoMapper;
 import com.example.empsched.employee.service.OrganisationService;
-import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
+import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerRequest;
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/organisations")
+@RequestMapping("/organisations" )
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.NEVER)
 public class OrganisationController {
@@ -24,10 +25,15 @@ public class OrganisationController {
     private final DtoMapper mapper;
 
     @PostMapping
-    public ResponseEntity<OrganisationResponse> createOrganisation(@RequestBody @Valid final CreateOrganisationRequest request) {
-        final Organisation organisation = organisationService.createOrganisation(mapper.mapToOrganisation(request));
+    public ResponseEntity<OrganisationResponse> createOrganisationWithOwner(
+            @RequestBody @Valid final CreateOrganisationWithOwnerRequest request,
+            @RequestParam final UUID organisationId,
+            @RequestParam final UUID ownerId) {
+        final Organisation organisation = mapper.mapToOrganisation(organisationId, request);
+        final Employee owner = mapper.mapToEmployee(ownerId, request);
+        final Organisation created = organisationService.createOrganisationWithOwner(organisation, owner);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToOrganisationResponse(organisation));
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.mapToOrganisationResponse(created));
     }
 
     @DeleteMapping("/{id}")

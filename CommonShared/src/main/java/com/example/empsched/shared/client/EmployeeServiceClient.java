@@ -1,6 +1,6 @@
 package com.example.empsched.shared.client;
 
-import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
+import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerRequest;
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
 import com.example.empsched.shared.dto.position.PositionResponse;
@@ -19,8 +19,8 @@ public class EmployeeServiceClient {
 
     private final ServiceClient serviceClient;
 
-    public ResponseEntity<OrganisationResponse> createOrganisation(final CreateOrganisationRequest request) {
-        return serviceClient.sendRequest(SERVICE_TYPE, "/organisations", HttpMethod.POST, request, OrganisationResponse.class);
+    public ResponseEntity<OrganisationResponse> createOrganisationWithOwner(final CreateOrganisationWithOwnerRequest request, final UUID organisationId, final UUID ownerId) {
+        return serviceClient.sendRequest(SERVICE_TYPE, "/organisations?organisationId=" + organisationId + "&ownerId=" + ownerId, HttpMethod.POST, request, OrganisationResponse.class);
     }
 
     public ResponseEntity<Void> deleteOrganisation(final UUID id) {
