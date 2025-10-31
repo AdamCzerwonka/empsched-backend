@@ -39,8 +39,8 @@ public class PositionController {
     private final BaseMapper baseMapper;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
-    public ResponseEntity<PagedResponse<PositionResponse>> getOrganisationPositions(final FilterRequest filterRequest) {
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    public ResponseEntity<PagedResponse<PositionResponse>> getOrganisationPositions(@Valid final FilterRequest filterRequest) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         final Pageable pageable = baseMapper.mapToPageable(
                 filterRequest,
@@ -51,7 +51,7 @@ public class PositionController {
     }
 
     @PostMapping()
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<PositionResponse> createPosition(@RequestBody @Valid final CreatePositionRequest request) {
         final WorkflowOptions options = WorkflowOptions.newBuilder()
                 .setWorkflowId(UUID.randomUUID().toString())
@@ -65,7 +65,7 @@ public class PositionController {
     }
 
     @DeleteMapping("/{positionId}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<Void> deletePosition(@PathVariable final UUID positionId) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         positionService.deletePosition(positionId, organisationId);
