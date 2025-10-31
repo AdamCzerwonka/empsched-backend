@@ -1,6 +1,8 @@
 package com.example.empsched.employee.service.impl;
 
+import com.example.empsched.employee.entity.Employee;
 import com.example.empsched.employee.entity.Organisation;
+import com.example.empsched.employee.repository.EmployeeRepository;
 import com.example.empsched.employee.repository.OrganisationRepository;
 import com.example.empsched.employee.service.OrganisationService;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +17,15 @@ import java.util.UUID;
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public class OrganisationServiceImpl implements OrganisationService {
     private final OrganisationRepository organisationRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Override
-    public Organisation createOrganisation(final Organisation organisation) {
-        return organisationRepository.save(organisation);
+    public Organisation createOrganisationWithOwner(final Organisation organisation, final Employee owner) {
+        final Organisation savedOrganisation = organisationRepository.save(organisation);
+        owner.setOrganisation(savedOrganisation);
+        employeeRepository.save(owner);
+
+        return savedOrganisation;
     }
 
     @Override

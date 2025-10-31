@@ -10,6 +10,7 @@ import com.example.empsched.shared.configuration.BaseMapperConfig;
 import com.example.empsched.shared.dto.employee.CreateEmployeeRequest;
 import com.example.empsched.shared.dto.employee.EmployeeResponse;
 import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
+import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerRequest;
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
 import com.example.empsched.shared.dto.position.PositionResponse;
@@ -35,9 +36,15 @@ public interface DtoMapper {
 
     Organisation mapToOrganisation(CreateOrganisationRequest request);
 
+    @Mapping(source = "id", target = "id")
+    Organisation mapToOrganisation(UUID id, CreateOrganisationWithOwnerRequest request);
+
     OrganisationResponse mapToOrganisationResponse(Organisation organisation);
 
     Employee mapToEmployee(CreateEmployeeRequest request);
+
+    @Mapping(source = "id", target = "id")
+    Employee mapToEmployee(UUID id, CreateOrganisationWithOwnerRequest request);
 
     @Mapping(source = "organisation.id", target = "organisationId")
     EmployeeResponse mapToEmployeeResponse(Employee employee);

@@ -58,7 +58,7 @@ public class CreateOrganisationWithOwnerWorkflowImpl implements CreateOrganisati
             userActivities.createUserInAuthService(createUserRequest);
 
             saga.addCompensation(() -> organisationActivities.deleteOrganisationInEmployeeService(createOrganisationRequest.id()));
-            organisationActivities.createOrganisationInEmployeeService(createOrganisationRequest);
+            organisationActivities.createOrganisationWithOwnerInEmployeeService(request, organisationId, userId);
             log.info("Organisation with owner created successfully with Organisation ID: {} and User ID: {}", organisationId, userId);
             return organisationResponse;
         } catch (ActivityFailure e) {

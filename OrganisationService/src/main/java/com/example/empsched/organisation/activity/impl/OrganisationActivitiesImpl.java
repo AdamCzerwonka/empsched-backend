@@ -4,7 +4,7 @@ import com.example.empsched.organisation.activity.OrganisationActivities;
 import com.example.empsched.organisation.entity.Organisation;
 import com.example.empsched.organisation.service.OrganisationService;
 import com.example.empsched.organisation.util.WorkflowTasks;
-import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
+import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerRequest;
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import com.example.empsched.shared.client.EmployeeServiceClient;
 import io.temporal.spring.boot.ActivityImpl;
@@ -23,8 +23,8 @@ public class OrganisationActivitiesImpl implements OrganisationActivities {
     private final OrganisationService organisationService;
 
     @Override
-    public OrganisationResponse createOrganisationInEmployeeService(final CreateOrganisationRequest request) {
-        return employeeServiceClient.createOrganisation(request).getBody();
+    public OrganisationResponse createOrganisationWithOwnerInEmployeeService(final CreateOrganisationWithOwnerRequest request, final UUID organisationId, final UUID ownerId) {
+        return employeeServiceClient.createOrganisationWithOwner(request, organisationId, ownerId).getBody();
     }
 
     @Override
