@@ -27,7 +27,7 @@ public class PositionController {
     private final DtoMapper mapper;
 
     @PostMapping()
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<PositionResponse> createPosition(@RequestBody @Valid final CreatePositionRequest request) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         final Position position = positionService.createPosition(mapper.mapToPosition(request), organisationId);
@@ -36,7 +36,7 @@ public class PositionController {
     }
 
     @GetMapping("/employees/{employeeId}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<List<PositionResponse>> getEmployeePositions(@PathVariable final UUID employeeId) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         final List<Position> positions = positionService.getEmployeePositions(organisationId, employeeId);
@@ -44,7 +44,7 @@ public class PositionController {
     }
 
     @PostMapping("/{positionId}/employees/{employeeId}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<List<PositionResponse>> addPositionToEmployee(@PathVariable final UUID employeeId, @PathVariable final UUID positionId) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         final List<Position> positions = positionService.addPositionToEmployee(organisationId, employeeId, positionId);
@@ -52,7 +52,7 @@ public class PositionController {
     }
 
     @DeleteMapping("/{positionId}/employees/{employeeId}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<List<PositionResponse>> removePositionFromEmployee(@PathVariable final UUID employeeId, @PathVariable final UUID positionId) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         final List<Position> positions = positionService.removePositionFromEmployee(organisationId, employeeId, positionId);
@@ -60,7 +60,7 @@ public class PositionController {
     }
 
     @DeleteMapping("/{positionId}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<Void> deletePosition(@PathVariable final UUID positionId) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         positionService.deletePosition(organisationId, positionId);

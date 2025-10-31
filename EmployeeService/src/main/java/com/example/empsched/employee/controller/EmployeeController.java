@@ -39,8 +39,8 @@ public class EmployeeController {
     private final WorkflowClient client;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
-    public ResponseEntity<PagedResponse<EmployeeResponse>> getAllEmployees(final FilterRequest filterRequest) {
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    public ResponseEntity<PagedResponse<EmployeeResponse>> getAllEmployees(@Valid final FilterRequest filterRequest) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         final Pageable pageable = baseMapper.mapToPageable(
                 filterRequest,
@@ -51,7 +51,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<EmployeeResponse> createEmployee(@RequestBody @Valid CreateEmployeeRequest request) {
         final WorkflowOptions options = WorkflowOptions.newBuilder()
                 .setWorkflowId(UUID.randomUUID().toString())
@@ -64,7 +64,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{employeeId}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<Void> deleteEmployee(@PathVariable final UUID employeeId) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         employeeService.deleteEmployee(employeeId, organisationId);
