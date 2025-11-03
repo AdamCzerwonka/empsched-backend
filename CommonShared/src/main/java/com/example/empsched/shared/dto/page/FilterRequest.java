@@ -1,6 +1,7 @@
 package com.example.empsched.shared.dto.page;
 
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
 import lombok.*;
 
 @NoArgsConstructor
@@ -9,9 +10,10 @@ import lombok.*;
 @Setter
 @Builder
 public class FilterRequest {
-    @Size(min = 0, message = "Page number must be positive")
+    @Min(value = 0, message = "Page number must be non-negative")
     private Integer pageNumber = 0;
 
-    @Size(min = 1, max = 100, message = "Page size must be positive and not exceed 100")
+    @Min(value = 1, message = "Page size must be at least 1")
+    @Max(value = 100, message = "Page size must not exceed 100")
     private Integer pageSize = 10;
 }

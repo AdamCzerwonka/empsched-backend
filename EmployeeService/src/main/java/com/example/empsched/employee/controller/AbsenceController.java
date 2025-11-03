@@ -1,13 +1,19 @@
 package com.example.empsched.employee.controller;
 
+import com.example.empsched.employee.dto.absence.AbsenceFilterParams;
 import com.example.empsched.employee.dto.absence.AbsenceResponse;
 import com.example.empsched.employee.dto.absence.CreateAbsenceRequest;
 import com.example.empsched.employee.entity.Absence;
 import com.example.empsched.employee.mapper.DtoMapper;
 import com.example.empsched.employee.service.AbsenceService;
+import com.example.empsched.shared.dto.page.PagedResponse;
+import com.example.empsched.shared.mapper.BaseMapper;
 import com.example.empsched.shared.utils.CredentialsExtractor;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +30,21 @@ import java.util.UUID;
 public class AbsenceController {
     private final AbsenceService absenceService;
     private final DtoMapper dtoMapper;
+    private final BaseMapper baseMapper;
+
+    @GetMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<PagedResponse<AbsenceResponse>> getSelfAbsences(@Valid final AbsenceFilterParams filterParams) {
+        final UUID employeeId = CredentialsExtractor.getUserIdFromContext();
+        final Pageable pageable = baseMapper.mapToPageable(filterParams, Sort.by("startDate").ascending());
+        final Page<Absence> absences = absenceService.getAbsencesForEmployee(
+                employeeId,
+                filterParams.getStartFrom(),
+                filterParams.getStartTo(),
+                pageable
+        );
+        return ResponseEntity.ok(baseMapper.mapToPagedResponse(absences, dtoMapper::mapToAbsenceResponse));
+    }
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
