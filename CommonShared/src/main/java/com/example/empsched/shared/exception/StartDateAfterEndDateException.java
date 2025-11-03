@@ -1,6 +1,5 @@
-package com.example.empsched.employee.exception;
+package com.example.empsched.shared.exception;
 
-import com.example.empsched.shared.exception.ApplicationException;
 import org.springframework.http.HttpStatus;
 
 public class StartDateAfterEndDateException extends ApplicationException {
