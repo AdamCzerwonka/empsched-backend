@@ -59,6 +59,11 @@ public class AbsenceServiceImpl implements AbsenceService {
         return absenceRepository.save(absence);
     }
 
+    @Override
+    public void deleteAbsence(UUID absenceId, UUID employeeId) {
+        absenceRepository.deleteByIdAndEmployeeIdAndApprovedFalse(absenceId, employeeId);
+    }
+
     private void checkForOverlappingAbsences(Absence absence, Employee employee) {
         absenceRepository.findCollidingEmployeeAbsence(employee.getId(), absence.getStartDate(), absence.getEndDate())
                 .ifPresent(existingAbsence -> {
