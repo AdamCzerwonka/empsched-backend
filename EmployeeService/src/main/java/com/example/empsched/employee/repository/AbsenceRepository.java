@@ -18,4 +18,6 @@ public interface AbsenceRepository extends JpaRepository<Absence, UUID>, JpaSpec
     @Query("SELECT a FROM Absence a WHERE a.employee.id = :employeeId " +
             "AND (a.startDate <= :endDate AND a.endDate >= :startDate)")
     Optional<Absence> findCollidingEmployeeAbsence(UUID employeeId, LocalDate startDate, LocalDate endDate);
+
+    void deleteByIdAndEmployeeIdAndApprovedFalse(UUID absenceId, UUID employeeId);
 }

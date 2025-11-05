@@ -13,4 +13,6 @@ public interface AbsenceService {
     Absence createUnapprovedAbsence(final Absence absence, final UUID employeeId);
 
     Absence createApprovedAbsence(final Absence absence, final UUID employeeId, final UUID organisationId);
+
+    void deleteAbsence(final UUID absenceId, final UUID employeeId);
 }

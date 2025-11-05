@@ -66,4 +66,12 @@ public class AbsenceController {
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(dtoMapper.mapToAbsenceResponse(createdAbsence));
     }
+
+    @DeleteMapping("/{absenceId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> deleteSelfAbsence(@PathVariable final UUID absenceId) {
+        final UUID employeeId = CredentialsExtractor.getUserIdFromContext();
+        absenceService.deleteAbsence(absenceId, employeeId);
+        return ResponseEntity.noContent().build();
+    }
 }
