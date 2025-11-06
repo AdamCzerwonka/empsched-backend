@@ -1,4 +1,4 @@
-package com.example.empsched.shared.utils;
+package com.example.empsched.shared.util;
 
 import com.example.empsched.shared.exception.ForbiddenOperation;
 import com.example.empsched.shared.exception.StartDateAfterEndDateException;

@@ -1,6 +1,6 @@
-package com.example.empsched.shared.utils;
+package com.example.empsched.shared.util;
 
-import com.example.empsched.shared.exception.MessageParsingException;
+import com.example.empsched.shared.exception.AuthorizationTokenParsingException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +17,7 @@ public class CredentialsExtractor {
             Jwt jwt = authenticationToken.getToken();
             return UUID.fromString(jwt.getSubject());
         } catch (Exception e) {
-            throw new MessageParsingException(e);
+            throw new AuthorizationTokenParsingException(e);
         }
     }
 
@@ -27,7 +27,7 @@ public class CredentialsExtractor {
             Jwt jwt = authenticationToken.getToken();
             return jwt.getClaim("email");
         } catch (Exception e) {
-            throw new MessageParsingException(e);
+            throw new AuthorizationTokenParsingException(e);
         }
     }
 
@@ -37,7 +37,7 @@ public class CredentialsExtractor {
             Jwt jwt = authenticationToken.getToken();
             return UUID.fromString(jwt.getClaim("organisationId"));
         } catch (Exception e) {
-            throw new MessageParsingException(e);
+            throw new AuthorizationTokenParsingException(e);
         }
     }
 }

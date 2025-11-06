@@ -1,7 +1,7 @@
 package com.example.empsched.auth.service.impl;
 
 import com.example.empsched.auth.entity.User;
-import com.example.empsched.auth.exception.LoginFailedException;
+import com.example.empsched.auth.exception.InvalidCredentialsException;
 import com.example.empsched.auth.repository.UserRepository;
 import com.example.empsched.auth.service.JwtService;
 import com.example.empsched.auth.service.LoginService;
@@ -22,12 +22,12 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(LoginFailedException::new);
+                .orElseThrow(InvalidCredentialsException::new);
 
         if (passwordEncoder.matches(password, user.getPassword())) {
             return jwtService.generateToken(user.getId(), email, user.getOrganisationId(), user.getRoles());
         }
 
-        throw new LoginFailedException();
+        throw new InvalidCredentialsException();
     }
 }

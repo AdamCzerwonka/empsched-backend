@@ -1,4 +1,4 @@
-package com.example.empsched.shared.utils;
+package com.example.empsched.shared.util;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

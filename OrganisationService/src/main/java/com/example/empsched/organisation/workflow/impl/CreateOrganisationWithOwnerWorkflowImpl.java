@@ -11,7 +11,7 @@ import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
 import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerRequest;
 import com.example.empsched.shared.dto.user.CreateUserRequest;
 import com.example.empsched.shared.entity.Role;
-import com.example.empsched.shared.utils.CustomActivityOptions;
+import com.example.empsched.shared.util.CustomActivityOptions;
 import io.temporal.failure.ActivityFailure;
 import io.temporal.spring.boot.WorkflowImpl;
 import io.temporal.workflow.Saga;

@@ -1,4 +1,4 @@
-package com.example.empsched.employee.util.specification;
+package com.example.empsched.employee.specification;
 
 import com.example.empsched.employee.entity.Absence;
 import jakarta.persistence.criteria.Predicate;

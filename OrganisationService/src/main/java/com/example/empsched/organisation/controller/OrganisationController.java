@@ -7,7 +7,7 @@ import com.example.empsched.organisation.workflow.CreateOrganisationWithOwnerWor
 import com.example.empsched.organisation.service.OrganisationService;
 import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerRequest;
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
-import com.example.empsched.shared.utils.CredentialsExtractor;
+import com.example.empsched.shared.util.CredentialsExtractor;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import jakarta.validation.Valid;

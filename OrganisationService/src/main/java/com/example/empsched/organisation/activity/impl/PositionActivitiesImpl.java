@@ -7,7 +7,7 @@ import com.example.empsched.organisation.util.WorkflowTasks;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
 import com.example.empsched.shared.dto.position.PositionResponse;
 import com.example.empsched.shared.client.EmployeeServiceClient;
-import com.example.empsched.shared.utils.RequestContext;
+import com.example.empsched.shared.util.RequestContext;
 import io.temporal.spring.boot.ActivityImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

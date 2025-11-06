@@ -4,7 +4,7 @@ import com.example.empsched.employee.activity.EmployeeActivities;
 import com.example.empsched.employee.entity.Employee;
 import com.example.empsched.employee.service.EmployeeService;
 import com.example.empsched.employee.util.WorkflowTasks;
-import com.example.empsched.shared.utils.RequestContext;
+import com.example.empsched.shared.util.RequestContext;
 import io.temporal.spring.boot.ActivityImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
