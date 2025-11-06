@@ -8,7 +8,7 @@ import com.example.empsched.employee.mapper.DtoMapper;
 import com.example.empsched.employee.service.AbsenceService;
 import com.example.empsched.shared.dto.page.PagedResponse;
 import com.example.empsched.shared.mapper.BaseMapper;
-import com.example.empsched.shared.utils.CredentialsExtractor;
+import com.example.empsched.shared.util.CredentialsExtractor;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

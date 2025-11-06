@@ -10,7 +10,7 @@ import com.example.empsched.employee.repository.EmployeeRepository;
 import com.example.empsched.employee.repository.OrganisationRepository;
 import com.example.empsched.employee.repository.PositionRepository;
 import com.example.empsched.employee.service.PositionService;
-import com.example.empsched.shared.utils.BaseThrowChecks;
+import com.example.empsched.shared.util.BaseThrowChecks;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

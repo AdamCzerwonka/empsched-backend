@@ -7,7 +7,7 @@ import com.example.empsched.organisation.exception.PositionAlreadyExistsExceptio
 import com.example.empsched.organisation.repository.OrganisationRepository;
 import com.example.empsched.organisation.repository.PositionRepository;
 import com.example.empsched.organisation.service.PositionService;
-import com.example.empsched.shared.utils.BaseThrowChecks;
+import com.example.empsched.shared.util.BaseThrowChecks;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

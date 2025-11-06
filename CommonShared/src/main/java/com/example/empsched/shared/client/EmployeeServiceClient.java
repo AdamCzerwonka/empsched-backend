@@ -4,7 +4,7 @@ import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerR
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
 import com.example.empsched.shared.dto.position.PositionResponse;
-import com.example.empsched.shared.utils.RequestContext;
+import com.example.empsched.shared.util.RequestContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;

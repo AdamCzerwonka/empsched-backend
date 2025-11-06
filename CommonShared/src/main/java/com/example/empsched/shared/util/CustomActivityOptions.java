@@ -1,4 +1,4 @@
-package com.example.empsched.shared.utils;
+package com.example.empsched.shared.util;
 
 import io.temporal.activity.ActivityOptions;
 import lombok.AccessLevel;

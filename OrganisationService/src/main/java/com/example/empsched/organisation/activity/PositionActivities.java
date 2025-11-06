@@ -3,7 +3,7 @@ package com.example.empsched.organisation.activity;
 import com.example.empsched.organisation.entity.Position;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
 import com.example.empsched.shared.dto.position.PositionResponse;
-import com.example.empsched.shared.utils.RequestContext;
+import com.example.empsched.shared.util.RequestContext;
 import io.temporal.activity.ActivityInterface;
 import io.temporal.activity.ActivityMethod;
 

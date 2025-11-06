@@ -2,7 +2,7 @@ package com.example.empsched.employee.workflow;
 
 import com.example.empsched.employee.entity.Employee;
 import com.example.empsched.shared.dto.employee.CreateEmployeeRequest;
-import com.example.empsched.shared.utils.RequestContext;
+import com.example.empsched.shared.util.RequestContext;
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
 

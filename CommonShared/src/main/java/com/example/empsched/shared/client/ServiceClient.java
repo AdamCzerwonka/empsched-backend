@@ -1,6 +1,6 @@
 package com.example.empsched.shared.client;
 
-import com.example.empsched.shared.utils.RequestContext;
+import com.example.empsched.shared.util.RequestContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
