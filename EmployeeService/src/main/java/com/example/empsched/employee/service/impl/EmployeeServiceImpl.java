@@ -7,6 +7,7 @@ import com.example.empsched.employee.exception.OrganisationNotFoundException;
 import com.example.empsched.employee.repository.EmployeeRepository;
 import com.example.empsched.employee.repository.OrganisationRepository;
 import com.example.empsched.employee.service.EmployeeService;
+import com.example.empsched.shared.util.BaseThrowChecks;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -46,6 +48,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void deleteEmployee(UUID employeeId, UUID organisationId) {
-        employeeRepository.deleteByIdAndOrganisationId(employeeId, organisationId);
+        Optional<Employee> employeeOpt = employeeRepository.findById(employeeId);
+        if (employeeOpt.isEmpty()) {
+            return;
+        }
+        BaseThrowChecks.throwIfNotRelated(organisationId, employeeOpt.get().getOrganisation().getId());
+        employeeRepository.deleteById(employeeId);
     }
 }

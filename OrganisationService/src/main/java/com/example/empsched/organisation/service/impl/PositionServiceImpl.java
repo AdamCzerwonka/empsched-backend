@@ -46,7 +46,6 @@ public class PositionServiceImpl implements PositionService {
     public void deletePosition(final UUID positionId, final UUID callerOrganisationId) {
         final Optional<Position> position = positionRepository.findById(positionId);
         if (position.isEmpty()) return;
-        // TODO add checks for linked employees (?)
         BaseThrowChecks.throwIfNotRelated(callerOrganisationId, position.get().getOrganisation().getId());
         positionRepository.deleteById(positionId);
     }

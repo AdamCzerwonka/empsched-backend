@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -17,7 +17,12 @@ import java.util.UUID;
 public interface AbsenceRepository extends JpaRepository<Absence, UUID>, JpaSpecificationExecutor<Absence> {
     @Query("SELECT a FROM Absence a WHERE a.employee.id = :employeeId " +
             "AND (a.startDate <= :endDate AND a.endDate >= :startDate)")
-    Optional<Absence> findCollidingEmployeeAbsence(UUID employeeId, LocalDate startDate, LocalDate endDate);
+    List<Absence> findAllCollidingEmployeeAbsence(UUID employeeId, LocalDate startDate, LocalDate endDate);
+
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Absence a " +
+            "WHERE a.employee.id = :employeeId " +
+            "AND (a.startDate <= :endDate AND a.endDate >= :startDate)")
+    boolean hasEmployeeCollidingAbsences(UUID employeeId, LocalDate startDate, LocalDate endDate);
 
     void deleteByIdAndEmployeeIdAndApprovedFalse(UUID absenceId, UUID employeeId);
 }

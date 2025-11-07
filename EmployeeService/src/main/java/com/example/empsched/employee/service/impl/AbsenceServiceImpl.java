@@ -2,6 +2,7 @@ package com.example.empsched.employee.service.impl;
 
 import com.example.empsched.employee.entity.Absence;
 import com.example.empsched.employee.entity.Employee;
+import com.example.empsched.employee.exception.AbsenceAlreadyApprovedException;
 import com.example.empsched.employee.exception.AbsenceOverlapException;
 import com.example.empsched.employee.exception.EmployeeNotFoundException;
 import com.example.empsched.employee.repository.AbsenceRepository;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,7 +42,7 @@ public class AbsenceServiceImpl implements AbsenceService {
         BaseThrowChecks.checkDateValidity(absence.getStartDate(), absence.getEndDate());
         final Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
-        checkForOverlappingAbsences(absence, employee);
+        throwIfOverlappingAbsences(absence, employee);
 
         absence.setEmployee(employee);
         absence.setApproved(false);
@@ -50,9 +52,10 @@ public class AbsenceServiceImpl implements AbsenceService {
     @Override
     public Absence createApprovedAbsence(Absence absence, UUID employeeId, UUID organisationId) {
         BaseThrowChecks.checkDateValidity(absence.getStartDate(), absence.getEndDate());
-        final Employee employee = employeeRepository.findByIdAndOrganisationId(employeeId, organisationId)
+        final Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
-        checkForOverlappingAbsences(absence, employee);
+        throwIfOverlappingAbsences(absence, employee);
+        BaseThrowChecks.throwIfNotRelated(organisationId, employee.getOrganisation().getId());
 
         absence.setEmployee(employee);
         absence.setApproved(true);
@@ -61,13 +64,21 @@ public class AbsenceServiceImpl implements AbsenceService {
 
     @Override
     public void deleteAbsence(UUID absenceId, UUID employeeId) {
-        absenceRepository.deleteByIdAndEmployeeIdAndApprovedFalse(absenceId, employeeId);
+        Optional<Absence> absenceOpt = absenceRepository.findById(absenceId);
+
+        if (absenceOpt.isEmpty()) {
+            return;
+        } else if (absenceOpt.get().isApproved()) {
+            throw new AbsenceAlreadyApprovedException(absenceId);
+        }
+
+        BaseThrowChecks.throwIfNotRelated(employeeId, absenceOpt.get().getEmployee().getId());
+        absenceRepository.deleteById(absenceId);
     }
 
-    private void checkForOverlappingAbsences(Absence absence, Employee employee) {
-        absenceRepository.findCollidingEmployeeAbsence(employee.getId(), absence.getStartDate(), absence.getEndDate())
-                .ifPresent(existingAbsence -> {
-                    throw new AbsenceOverlapException();
-                });
+    private void throwIfOverlappingAbsences(Absence absence, Employee employee) {
+         if (absenceRepository.hasEmployeeCollidingAbsences(employee.getId(), absence.getStartDate(), absence.getEndDate())) {
+             throw new AbsenceOverlapException();
+         }
     }
 }
