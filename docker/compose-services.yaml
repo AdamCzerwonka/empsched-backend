@@ -73,6 +73,21 @@ services:
     depends_on:
       - eureka
 
+  scheduling:
+    build:
+      context: ..
+      dockerfile: SchedulingService/Dockerfile
+    container_name: scheduling
+    restart: always
+    ports:
+      - "${SCHEDULING_APP_MAPPED_PORT}:${SCHEDULING_APP_PORT}"
+    env_file:
+      - .env.services
+    networks:
+      - empsched-backend-network
+    depends_on:
+      - eureka
+
 networks:
   empsched-backend-network:
     external: true

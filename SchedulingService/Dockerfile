@@ -15,7 +15,7 @@ RUN mvn -B dependency:go-offline
 
 COPY . ./
 
-RUN mvn -B -pl EmployeeService -am clean package
+RUN mvn -B -pl SchedulingService -am clean package
 
 FROM eclipse-temurin:24-alpine AS jre-build
 
@@ -24,7 +24,7 @@ WORKDIR /app
 RUN apk update && \
     apk add --no-cache tar binutils
 
-COPY --from=build /app/EmployeeService/target/*.jar app.jar
+COPY --from=build /app/SchedulingService/target/*.jar app.jar
 RUN jar xvf /app/app.jar
 RUN jdeps --ignore-missing-deps -q \
     --recursive \
