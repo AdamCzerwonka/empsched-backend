@@ -9,7 +9,6 @@ COPY CommonShared/pom.xml ./CommonShared/
 COPY EmployeeService/pom.xml ./EmployeeService/
 COPY EurekaDiscovery/pom.xml ./EurekaDiscovery/
 COPY OrganisationService/pom.xml ./OrganisationService/
-COPY WorkflowService/pom.xml ./WorkflowService/
 
 RUN mvn -B dependency:go-offline
 
