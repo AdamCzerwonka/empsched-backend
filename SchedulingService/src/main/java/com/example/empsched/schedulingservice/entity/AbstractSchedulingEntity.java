@@ -1,5 +1,6 @@
-package com.example.empsched.shared.entity;
+package com.example.empsched.schedulingservice.entity;
 
+import com.example.empsched.shared.entity.AbstractEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,8 +17,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @MappedSuperclass
 @NoArgsConstructor
-public abstract class AbstractEntity {
+public abstract class AbstractSchedulingEntity {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Version
     private Long version;
@@ -26,9 +29,6 @@ public abstract class AbstractEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    protected AbstractEntity(UUID id) {
-        this.id = id;
-    }
 
     @Override
     public boolean equals(Object o) {

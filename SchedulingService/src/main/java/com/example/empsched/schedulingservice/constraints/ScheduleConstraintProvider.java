@@ -2,9 +2,14 @@ package com.example.empsched.schedulingservice.constraints;
 
 import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
 import ai.timefold.solver.core.api.score.stream.*;
+import com.example.empsched.schedulingservice.entity.AvailabilityType;
+import com.example.empsched.schedulingservice.entity.EmployeeAvailability;
 import com.example.empsched.schedulingservice.entity.Shift;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-
+@Component
+@Slf4j
 public class ScheduleConstraintProvider implements ConstraintProvider {
 
     @Override
@@ -12,7 +17,11 @@ public class ScheduleConstraintProvider implements ConstraintProvider {
         return new Constraint[] {
                 requiredSkill(constraintFactory),
                 maxWorkingHours(constraintFactory),
-                noOverlappingShifts(constraintFactory)
+                noOverlappingShifts(constraintFactory),
+                employeeUnavailable(constraintFactory),
+                employeeDesired(constraintFactory),
+                minimizeUnassignedShifts(constraintFactory)
+
         };
     }
 
@@ -24,6 +33,14 @@ public class ScheduleConstraintProvider implements ConstraintProvider {
                         .contains(shift.getRequiredSkill()))
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Missing required skill");
+    }
+
+    //SOFT: Heavily penalize unassigned shifts so the solver tries to fill them
+    Constraint minimizeUnassignedShifts(ConstraintFactory factory) {
+        return factory.forEachIncludingUnassigned(Shift.class)
+                .filter(shift -> shift.getAssignedEmployee() == null)
+                .penalize(HardSoftScore.ofSoft(10)) // Penalty of 10 points per empty shift
+                .asConstraint("Shift unassigned");
     }
 
     // Hard Constraint: Employee cannot be in two places at once
@@ -45,5 +62,36 @@ public class ScheduleConstraintProvider implements ConstraintProvider {
                 .penalize(HardSoftScore.ONE_HARD,
                         (employee, totalMinutes) -> (int) (totalMinutes - (employee.getMaxWeeklyHours() * 60)))
                 .asConstraint("Max working hours exceeded");
+    }
+
+    public Constraint employeeUnavailable(ConstraintFactory constraintFactory) {
+        return constraintFactory
+                .forEach(Shift.class)
+                .join(EmployeeAvailability.class,
+                        // Match the shift's assigned employee...
+                        Joiners.equal(Shift::getAssignedEmployee, EmployeeAvailability::getEmployee),
+                        // ...and ensure the dates match (Shift date == Availability date)
+                        Joiners.filtering((shift, availability) ->
+                                shift.getStartTime().toLocalDate().equals(availability.getDate())
+                        ))
+                .filter((shift, availability) -> availability.getType() == AvailabilityType.UNAVAILABLE)
+                .penalize(HardSoftScore.ONE_HARD) // Hard constraint: Breaks the schedule if violated
+                .asConstraint("Employee is unavailable (Vacation or Holiday)");
+    }
+
+    Constraint employeeDesired(ConstraintFactory constraintFactory) {
+        return constraintFactory
+                .forEach(Shift.class)
+                // Join Shift with Availability where Employee matches...
+                .join(EmployeeAvailability.class,
+                        Joiners.equal(Shift::getAssignedEmployee, EmployeeAvailability::getEmployee),
+                        // ...and the Date matches
+                        Joiners.filtering((shift, availability) ->
+                                shift.getStartTime().toLocalDate().equals(availability.getDate())))
+                // Only care if the type is DESIRED
+                .filter((shift, availability) -> availability.getType() == AvailabilityType.DESIRED)
+                // REWARD the score (add points) instead of penalizing
+                .reward(HardSoftScore.ONE_SOFT)
+                .asConstraint("Employee desires day");
     }
 }

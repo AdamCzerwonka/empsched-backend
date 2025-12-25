@@ -19,9 +19,7 @@ public class ShiftGeneratorService {
     private static final LocalTime EVENING_START = LocalTime.of(16, 0);
     private static final LocalTime EVENING_END = LocalTime.of(0, 0); // Midnight
 
-    /**
-     * Generates empty shift slots for the entire duration of the schedule.
-     */
+
     public List<Shift> generateShiftsFor(Schedule schedule) {
         List<Shift> newShifts = new ArrayList<>();
 
@@ -32,7 +30,11 @@ public class ShiftGeneratorService {
         while (!currentDate.isAfter(endDate)) {
 
             // --- LOGIC: Define what shifts are needed per day ---
-
+            if (isPublicHoliday(currentDate)) {
+                // Skip generating shifts, or generate reduced shifts
+                currentDate = currentDate.plusDays(1);
+                continue;
+            }
             // Example: Every day needs 2 "Nurses" in the morning
             newShifts.add(createShift(schedule, currentDate, MORNING_START, MORNING_END, "Nurse"));
             newShifts.add(createShift(schedule, currentDate, MORNING_START, MORNING_END, "Nurse"));
@@ -49,6 +51,11 @@ public class ShiftGeneratorService {
         }
 
         return newShifts;
+    }
+
+    private boolean isPublicHoliday(LocalDate date) {
+        // check against a list of public holidays
+        return false;
     }
 
     private Shift createShift(Schedule schedule, LocalDate date, LocalTime start, LocalTime end, String skill) {

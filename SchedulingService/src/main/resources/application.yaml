@@ -10,6 +10,10 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: create-drop
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
   datasource:
     url: ${DATASOURCE_URL}${DATASOURCE_SCHEDULING_DATABASE}
     username: ${DATASOURCE_SCHEDULING_USERNAME}
@@ -43,14 +47,15 @@ jwt:
     key: classpath:certs/public.pem
 services:
   auth:
-    url: ${USER_SERVICE_URL}
+    url: ${USER_SERVICE_URL:9001}
   organisation:
-    url: ${SCHEDULING_SERVICE_URL}
+    url: ${ORGANISATION_SERVICE_URL:9003}
   employee:
-    url: ${EMPLOYEE_SERVICE_URL}
+    url: ${EMPLOYEE_SERVICE_URL:9002}
   scheduling:
-    url: ${SCHEDULING_SERVICE_URL}
+    url: ${SCHEDULING_SERVICE_URL:9005}
 timefold:
   solver:
+#    solver-config-xml: solverConfig.xml
     termination:
-      spent-limit: ${TIMEFOLD_SPENT_LIMIT:30s}
+      spent-limit: ${TIMEFOLD_TIME_LIMIT:60s}

@@ -6,6 +6,7 @@ import ai.timefold.solver.core.api.domain.variable.PlanningVariable;
 import com.example.empsched.shared.entity.AbstractEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Duration;
@@ -16,8 +17,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-public class Shift extends AbstractEntity {
-
+@NoArgsConstructor
+public class Shift extends AbstractSchedulingEntity {
 
     @Column(nullable = false, name = "START_TIME")
     private LocalDateTime startTime;
@@ -26,8 +27,8 @@ public class Shift extends AbstractEntity {
     private String requiredSkill;
 
     // This is the field Timefold will modify
-    @PlanningVariable(valueRangeProviderRefs = "employeeRange")
-    @ManyToOne
+    @PlanningVariable(valueRangeProviderRefs = "employeeRange", allowsUnassigned = true)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private SchedulingEmployee assignedEmployee;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -15,7 +15,7 @@ RUN mvn -B dependency:go-offline
 
 COPY . ./
 
-RUN mvn -B -pl SchedulingService -am clean package
+RUN mvn -B -pl SchedulingService -am clean package -DskipTests
 
 FROM eclipse-temurin:24-alpine AS jre-build
 

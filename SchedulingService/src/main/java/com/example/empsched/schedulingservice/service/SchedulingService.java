@@ -1,10 +1,8 @@
 package com.example.empsched.schedulingservice.service;
 
 import ai.timefold.solver.core.api.solver.SolverManager;
-import com.example.empsched.schedulingservice.entity.Schedule;
-import com.example.empsched.schedulingservice.entity.ScheduleStatus;
-import com.example.empsched.schedulingservice.entity.SchedulingEmployee;
-import com.example.empsched.schedulingservice.entity.Shift;
+import com.example.empsched.schedulingservice.entity.*;
+import com.example.empsched.schedulingservice.repository.EmployeeAvailabilityRepository;
 import com.example.empsched.schedulingservice.repository.ScheduleRepository;
 import com.example.empsched.schedulingservice.repository.SchedulingEmployeeRepository;
 import com.example.empsched.schedulingservice.repository.ShiftRepository;
@@ -29,6 +27,22 @@ public class SchedulingService {
     private final SolverManager<WorkSchedule, UUID> solverManager;
     private final ScheduleRepository scheduleRepository;
 
+
+    private final EmployeeAvailabilityRepository availabilityRepository; // Inject this
+
+    private WorkSchedule loadProblem(UUID scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow();
+
+        List<SchedulingEmployee> employees = employeeRepository.findAll();
+        List<Shift> shifts = shiftRepository.findAllByScheduleId(scheduleId);
+
+        // Fetch availability only for the relevant date range to optimize performance
+        List<EmployeeAvailability> availabilities = availabilityRepository
+                .findAllByDateBetween(schedule.getStartDate(), schedule.getEndDate());
+
+        return new WorkSchedule(scheduleId, employees, shifts, availabilities);
+    }
+
     public void solveSchedule(UUID scheduleId) {
 
         solverManager.solveBuilder()
@@ -49,13 +63,6 @@ public class SchedulingService {
 
                 // 4. EXECUTE: Returns a SolverJob immediately (Async)
                 .run();
-    }
-
-    // Helper to load data (The "Problem Finder")
-    private WorkSchedule loadProblem(UUID scheduleId) {
-        List<SchedulingEmployee> employees = employeeRepository.findAll();
-        List<Shift> shifts = shiftRepository.findAllByScheduleId(scheduleId);
-        return new WorkSchedule(scheduleId, employees, shifts);
     }
 
     @Transactional

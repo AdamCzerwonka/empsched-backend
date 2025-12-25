@@ -14,16 +14,15 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class SchedulingEmployee extends  AbstractEntity {
+@NoArgsConstructor
+public class SchedulingEmployee extends AbstractSchedulingEntity {
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> skills;
 
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    private Set<String> skills;
-
-    @Enumerated(EnumType.STRING)
-    private ContractType contractType;
+//    @Enumerated(EnumType.STRING)
+//    private ContractType contractType;
 
     private int maxWeeklyHours;
 

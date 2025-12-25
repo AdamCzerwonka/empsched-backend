@@ -6,6 +6,7 @@ import ai.timefold.solver.core.api.domain.solution.PlanningSolution;
 import ai.timefold.solver.core.api.domain.solution.ProblemFactCollectionProperty;
 import ai.timefold.solver.core.api.domain.valuerange.ValueRangeProvider;
 import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
+import com.example.empsched.schedulingservice.entity.EmployeeAvailability;
 import com.example.empsched.schedulingservice.entity.SchedulingEmployee;
 import com.example.empsched.schedulingservice.entity.Shift;
 import lombok.Getter;
@@ -32,10 +33,18 @@ public class WorkSchedule {
     @PlanningEntityCollectionProperty
     private List<Shift> shiftList;
 
-    public WorkSchedule(UUID scheduleId, List<SchedulingEmployee> employeeList, List<Shift> shiftList) {
+    @ProblemFactCollectionProperty
+    private List<EmployeeAvailability> availabilityList;
+
+    public WorkSchedule(UUID scheduleId,
+                        List<SchedulingEmployee> employeeList,
+                        List<Shift> shiftList,
+                        List<EmployeeAvailability> availabilityList) {
         this.scheduleId = scheduleId;
         this.employeeList = employeeList;
         this.shiftList = shiftList;
+        this.availabilityList = availabilityList;
     }
+
 }
 

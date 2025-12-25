@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
-    <property name="logstashURL" value="${LOGSTASH_CONNECTION:-localhost:5044}"/>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -8,18 +7,25 @@
             <encoding>UTF-8</encoding>
         </encoder>
     </appender>
-    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>localhost:5044</destination> <!-- Logstash TCP port -->
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>{"app_name": "SCHEDULING_SERVICE"}</customFields>
-        </encoder>
-        <!-- Optional reconnection config -->
-        <keepAliveDuration>5 minutes</keepAliveDuration>
-        <reconnectionDelay>3000</reconnectionDelay>
-    </appender>
-
-    <root level="INFO">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="LOGSTASH"/>
-    </root>
+    <springProfile name="(dev | prod)">
+        <property name="logstashURL" value="${LOGSTASH_CONNECTION:-localhost:5044}"/>
+        <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+            <destination>${logstashURL}</destination> <!-- Logstash TCP port -->
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"app_name": "SCHEDULING_SERVICE"}</customFields>
+            </encoder>
+            <!-- Optional reconnection config -->
+            <keepAliveDuration>5 minutes</keepAliveDuration>
+            <reconnectionDelay>3000</reconnectionDelay>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="LOGSTASH"/>
+        </root>
+    </springProfile>
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
 </configuration>
