@@ -17,7 +17,9 @@ import java.util.UUID;
 @MappedSuperclass
 @NoArgsConstructor
 public abstract class AbstractEntity {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Version
     private Long version;

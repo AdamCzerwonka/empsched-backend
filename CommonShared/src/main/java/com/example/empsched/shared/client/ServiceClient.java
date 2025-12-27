@@ -26,6 +26,8 @@ public class ServiceClient {
     @Value("${services.employee.url}")
     private String employeeServiceUrl;
 
+    @Value("${services.scheduling.url}")
+    private String schedulingServiceUrl;
 
     public <T, R> ResponseEntity<R> sendRequest(final ServiceType service, final String path, final HttpMethod method, final T payload, final Class<R> responseType) {
         return sendRequest(service, path, method, payload, responseType, null);
@@ -56,6 +58,7 @@ public class ServiceClient {
             case AUTH -> authServiceUrl;
             case ORGANISATION -> organisationServiceUrl;
             case EMPLOYEE -> employeeServiceUrl;
+            case SCHEDULING -> schedulingServiceUrl;
         };
     }
 }
