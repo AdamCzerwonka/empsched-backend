@@ -4,6 +4,7 @@ import com.example.empsched.scheduling.entity.Employee;
 import com.example.empsched.scheduling.entity.Organisation;
 import com.example.empsched.scheduling.entity.Position;
 import com.example.empsched.scheduling.exceptions.EmployeeNotFoundException;
+import com.example.empsched.scheduling.exceptions.OrganisationNotFoundException;
 import com.example.empsched.scheduling.exceptions.PositionNotFoundException;
 import com.example.empsched.scheduling.repository.EmployeeRepository;
 import com.example.empsched.scheduling.repository.OrganisationRepository;
@@ -26,13 +27,8 @@ public class PositionService {
     private final EmployeeRepository employeeRepository;
     private final OrganisationRepository organisationRepository;
 
-    public Position createPosition(UUID id, String name, UUID organizationId) {
-        final Organisation organisation = organisationRepository.findById(organizationId)
-                .orElseThrow(() -> new IllegalArgumentException("Organisation not found: " + organizationId));
-
-        Position position = new Position();
-        position.setId(id);
-        position.setPositionName(name);
+    public Position createPosition(final Position position, final UUID organisationId) {
+        final Organisation organisation = organisationRepository.findById(organisationId).orElseThrow(() -> new OrganisationNotFoundException(organisationId));
         position.setOrganisation(organisation);
         return positionRepository.save(position);
     }

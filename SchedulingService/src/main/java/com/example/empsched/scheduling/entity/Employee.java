@@ -39,4 +39,7 @@ public class Employee extends AbstractEntity {
         return super.getId();
     }
 
+    public Employee(UUID id) {
+        super(id);
+    }
 }

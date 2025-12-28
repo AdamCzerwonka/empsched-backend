@@ -3,7 +3,6 @@ package com.example.empsched.scheduling.repository;
 import com.example.empsched.scheduling.entity.AvailabilityType;
 import com.example.empsched.scheduling.entity.EmployeeAvailability;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -16,7 +15,7 @@ public interface EmployeeAvailabilityRepository extends JpaRepository<EmployeeAv
 
     List<EmployeeAvailability> findAllByEmployeeId(UUID employeeId);
 
-    void deleteByEmployeeIdAndDateBetweenAndTypeIs(UUID employeeId, LocalDate dateAfter, LocalDate dateBefore, AvailabilityType type);
+    void deleteByAbsenceId(UUID absenceId);
 
 
 }

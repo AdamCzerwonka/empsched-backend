@@ -55,6 +55,9 @@ public class CreateEmployeeWorkflowImpl implements CreateEmployeeWorkflow {
             saga.addCompensation(() -> userActivities.deleteUserInAuthService(employeeId));
             userActivities.createUserInAuthService(createUserRequest);
 
+            saga.addCompensation(() -> employeeActivities.deleteEmployeeInSchedulingService(employeeId, context));
+            employeeActivities.createEmployeeInSchedulingService(createEmployeeRequest, context);
+
             return employee;
         } catch (ActivityFailure e) {
             log.error("Employee creation failed, starting compensation. Reason: {}", e.getMessage());

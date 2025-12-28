@@ -1,12 +1,13 @@
-package com.example.empsched.scheduling.dto;
+package com.example.empsched.shared.dto.scheduling;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record CreateAvailabilityDTO(
+public record CreateAvailabilityRequest(
         LocalDate startDate,
         LocalDate endDate,
         boolean isAvailable,
-        UUID employeeId
+        UUID employeeId,
+        UUID absenceId
 ) {
 }

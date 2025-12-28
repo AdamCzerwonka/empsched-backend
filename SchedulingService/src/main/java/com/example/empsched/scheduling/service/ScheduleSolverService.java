@@ -31,7 +31,7 @@ public class ScheduleSolverService {
     private WorkSchedule loadProblem(UUID scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow();
 
-        List<Employee> employees = employeeRepository.findAll();
+        List<Employee> employees = employeeRepository.findAllByOrganisationId(schedule.getOrganisation().getId());
         List<Shift> shifts = shiftRepository.findAllByScheduleId(scheduleId);
 
         // Fetch availability only for the relevant date range to optimize performance

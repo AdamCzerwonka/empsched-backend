@@ -9,10 +9,9 @@ import com.example.empsched.scheduling.repository.OrganisationRepository;
 import com.example.empsched.shared.util.BaseThrowChecks;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,8 +23,8 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final OrganisationRepository organisationRepository;
 
-    public Page<Employee> getAllEmployees(final UUID organisationId, final Pageable pageable) {
-        return employeeRepository.findAllByOrganisationId(organisationId, pageable);
+    public List<Employee> getAllEmployees(final UUID organisationId) {
+        return employeeRepository.findAllByOrganisationId(organisationId);
     }
 
     public Employee createEmployee(final Employee employee, final UUID organisationId) {
@@ -38,8 +37,8 @@ public class EmployeeService {
         if (currentEmployeeCount >= maxEmployees) {
             throw new EmployeeLimitReachedException(organisation.getId(), maxEmployees);
         }
-
         employee.setOrganisation(organisation);
+        employee.setMaxWeeklyHours(40); // Default value, can be updated later
         return employeeRepository.save(employee);
     }
 

@@ -1,13 +1,11 @@
 package com.example.empsched.scheduling.service;
 
-import com.example.empsched.scheduling.dto.ScheduleGenerationRequestDTO;
-import com.example.empsched.scheduling.entity.Organisation;
+import com.example.empsched.scheduling.dto.ScheduleGenerationRequest;
 import com.example.empsched.scheduling.entity.Schedule;
 import com.example.empsched.scheduling.entity.ScheduleStatus;
 import com.example.empsched.scheduling.entity.Shift;
 import com.example.empsched.scheduling.repository.OrganisationRepository;
 import com.example.empsched.scheduling.repository.ScheduleRepository;
-import com.example.empsched.scheduling.repository.ShiftRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,7 @@ public class ScheduleService {
     private final ShiftGeneratorService shiftGeneratorService;
     private final OrganisationRepository organisationRepository;
 
-    public Schedule createDraftSchedule(ScheduleGenerationRequestDTO requestDTO, UUID organisationId) {
+    public Schedule createDraftSchedule(ScheduleGenerationRequest requestDTO, UUID organisationId) {
         Schedule schedule = new Schedule();
         schedule.setStartDate(requestDTO.startDate());
         schedule.setEndDate(requestDTO.endDate());

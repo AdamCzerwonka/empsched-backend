@@ -21,6 +21,7 @@ public class OrganisationService {
     public Organisation createOrganisationWithOwner(final Organisation organisation, final Employee owner) {
         final Organisation savedOrganisation = organisationRepository.save(organisation);
         owner.setOrganisation(savedOrganisation);
+        owner.setMaxWeeklyHours(40); // Default max weekly hours for owner, TODO: should owner be schedulable?
         employeeRepository.save(owner);
 
         return savedOrganisation;

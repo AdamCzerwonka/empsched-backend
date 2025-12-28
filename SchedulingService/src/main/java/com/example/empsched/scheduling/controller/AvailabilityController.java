@@ -1,15 +1,14 @@
 package com.example.empsched.scheduling.controller;
 
-import com.example.empsched.scheduling.dto.CreateAvailabilityDTO;
-import com.example.empsched.scheduling.entity.EmployeeAvailability;
+import com.example.empsched.scheduling.mappers.DtoMapper;
+import com.example.empsched.shared.dto.scheduling.CreateAvailabilityRequest;
 import com.example.empsched.scheduling.service.EmployeeAvailabilityService;
+import com.example.empsched.shared.dto.scheduling.EmployeeAvailabilitiesResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,28 +18,23 @@ import java.util.UUID;
 public class AvailabilityController {
 
     private final EmployeeAvailabilityService employeeAvailabilityService;
+    private final DtoMapper dtoMapper;
 
     @PostMapping
-    public ResponseEntity<List<EmployeeAvailability>> createAvailability(
-            @RequestBody CreateAvailabilityDTO createAvailabilityDTO
-    ) {
-        return ResponseEntity.ok(employeeAvailabilityService.createEmployeeAvailabilities(createAvailabilityDTO));
+    public ResponseEntity<EmployeeAvailabilitiesResponse> createAvailability(@RequestBody CreateAvailabilityRequest createAvailabilityDTO) {
+        return ResponseEntity.ok(new EmployeeAvailabilitiesResponse(dtoMapper.toAvailabilityResponseList(employeeAvailabilityService.createEmployeeAvailabilities(createAvailabilityDTO))));
     }
-
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<List<EmployeeAvailability>> getAvailabilities(@PathVariable UUID employeeId) {
-        return ResponseEntity.ok(employeeAvailabilityService.getEmployeeAvailability(employeeId));
+    public ResponseEntity<EmployeeAvailabilitiesResponse> getAvailabilities(@PathVariable UUID employeeId) {
+        return ResponseEntity.ok(new EmployeeAvailabilitiesResponse(dtoMapper.toAvailabilityResponseList(employeeAvailabilityService.getEmployeeAvailability(employeeId))));
     }
 
-    @DeleteMapping("/{employeeId}")
+    @DeleteMapping("/absences/{absenceId}")
     public ResponseEntity<Void> deleteAvailability(
-            @PathVariable UUID employeeId,
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate,
-            @RequestParam boolean isAvailable
+            @PathVariable UUID absenceId
     ) {
-        employeeAvailabilityService.deleteEmployeeAvailability(startDate, endDate, employeeId, isAvailable);
+        employeeAvailabilityService.deleteEmployeeUnavailability(absenceId);
         return ResponseEntity.noContent().build();
     }
 
