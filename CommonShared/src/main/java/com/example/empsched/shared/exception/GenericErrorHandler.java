@@ -3,6 +3,7 @@ package com.example.empsched.shared.exception;
 import com.example.empsched.shared.dto.Problem;
 import io.temporal.client.WorkflowFailedException;
 import io.temporal.failure.ApplicationFailure;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,5 +36,22 @@ public class GenericErrorHandler {
         }
         Problem problem = new Problem("Internal server error", "default");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(problem);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Problem> handleConstraintViolationException(ConstraintViolationException ex) {
+        StringBuilder messageBuilder = new StringBuilder("Validation failed for fields:\n");
+
+        ex.getConstraintViolations().forEach(violation -> {
+            String propertyPath = violation.getPropertyPath().toString();
+            String fieldName = propertyPath.substring(propertyPath.lastIndexOf('.') + 1);
+            String errorMessage = violation.getMessage();
+            messageBuilder.append("- ").append(fieldName).append(": ").append(errorMessage).append("\n");
+        });
+
+        String combinedMessage = messageBuilder.toString();
+        log.error("Validation error: {}", combinedMessage);
+        Problem problem = new Problem(combinedMessage, "validation.error");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problem);
     }
 }
