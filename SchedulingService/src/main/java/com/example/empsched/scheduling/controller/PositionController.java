@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,21 +29,24 @@ public class PositionController {
     private final DtoMapper dtoMapper;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<PositionResponse> createPosition(@Valid @RequestBody CreatePositionRequest position) {
-        UUID organisationId = UUID.fromString("7123f3ec-3517-4d3e-98e2-4e98a4cd9581"); // TODO: Get from auth context when security is implemented
+        final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         return ResponseEntity.ok(dtoMapper.toResponse(positionService.createPosition(requestMapper.toEntity(position), organisationId)));
     }
 
     @DeleteMapping("/{positionId}")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<Void> deletePosition(@PathVariable UUID positionId) {
-        UUID organisationId = UUID.fromString("7123f3ec-3517-4d3e-98e2-4e98a4cd9581"); // TODO: Get from auth context when security is implemented
+        final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         positionService.deletePosition(positionId, organisationId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/employees/{employeeId}")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<List<PositionResponse>> getEmployeePositions(@PathVariable UUID employeeId) {
-        UUID organisationId = UUID.fromString("7123f3ec-3517-4d3e-98e2-4e98a4cd9581"); // TODO: Get from auth context when security is implemented
+        final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         return ResponseEntity.ok(dtoMapper.toPositionResponseList(positionService.getEmployeePositions(
                 organisationId,
                 employeeId
@@ -50,6 +54,7 @@ public class PositionController {
     }
 
     @PostMapping("/{positionId}/employees/{employeeId}")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<List<PositionResponse>> addPositionToEmployee(@PathVariable UUID employeeId, @PathVariable UUID positionId) {
         UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         List<Position> positions = positionService.addPositionToEmployee(organisationId, employeeId, positionId);
@@ -57,12 +62,11 @@ public class PositionController {
     }
 
     @DeleteMapping("/{positionId}/employees/{employeeId}")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<List<PositionResponse>> removePositionFromEmployee(@PathVariable UUID employeeId, @PathVariable UUID positionId) {
         UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         List<Position> positions = positionService.removePositionFromEmployee(organisationId, employeeId, positionId);
         return ResponseEntity.status(HttpStatus.OK).body(dtoMapper.toPositionResponseList(positions));
     }
-
-
 
 }

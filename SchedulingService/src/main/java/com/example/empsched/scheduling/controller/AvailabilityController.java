@@ -7,6 +7,7 @@ import com.example.empsched.shared.dto.scheduling.EmployeeAvailabilitiesResponse
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -21,22 +22,24 @@ public class AvailabilityController {
     private final DtoMapper dtoMapper;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<EmployeeAvailabilitiesResponse> createAvailability(@RequestBody CreateAvailabilityRequest createAvailabilityDTO) {
         return ResponseEntity.ok(new EmployeeAvailabilitiesResponse(dtoMapper.toAvailabilityResponseList(employeeAvailabilityService.createEmployeeAvailabilities(createAvailabilityDTO))));
     }
 
     @GetMapping("/{employeeId}")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<EmployeeAvailabilitiesResponse> getAvailabilities(@PathVariable UUID employeeId) {
         return ResponseEntity.ok(new EmployeeAvailabilitiesResponse(dtoMapper.toAvailabilityResponseList(employeeAvailabilityService.getEmployeeAvailability(employeeId))));
     }
 
     @DeleteMapping("/absences/{absenceId}")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<Void> deleteAvailability(
             @PathVariable UUID absenceId
     ) {
         employeeAvailabilityService.deleteEmployeeUnavailability(absenceId);
         return ResponseEntity.noContent().build();
     }
-
 
 }
