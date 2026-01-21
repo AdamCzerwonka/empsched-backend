@@ -33,4 +33,4 @@ jobs:
             - name: Build and analyze
               env:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-              run: mvn -pl OrganisationService -am verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=empsched-api-gateway
+              run: mvn -pl OrganisationService -am verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=empsched-organisation-service
