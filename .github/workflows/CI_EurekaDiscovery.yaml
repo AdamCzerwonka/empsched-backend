@@ -1,7 +1,7 @@
 name: CI Eureka Discovery
 on:
     workflow_dispatch:
-    push:
+    pull_request:
         paths:
             - "EurekaDiscovery/**"
             - "CommonShared/**"

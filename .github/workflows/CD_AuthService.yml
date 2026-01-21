@@ -1,4 +1,4 @@
-name: Build and Push Auth Service Docker Image
+name: CD Auth Service
 
 on:
     workflow_dispatch:
@@ -7,6 +7,10 @@ on:
             - closed
         branches:
             - main
+        paths:
+            - "AuthService/**"
+            - "CommonShared/**"
+            - "pom.xml"
 
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
