@@ -34,4 +34,7 @@ jobs:
             - name: Build and analyze
               env:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-              run: mvn -pl AuthService -am verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=empsched-auth-service
+              run: |
+                  mvn -pl AuthService -am verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                  -Dsonar.projectKey=empsched-auth-service \
+                  -Dsonar.projectName=AuthService
