@@ -113,6 +113,18 @@ services:
     networks:
       - empsched-backend-network
     command: server start-dev --ip 0.0.0.0
+
+  fake-gcs:
+    image: fsouza/fake-gcs-server
+    container_name: fake-gcs
+    ports:
+      - "${GCS_MAPPED_PORT}:${GCS_PORT}"
+    command: -scheme http
+    volumes:
+      - ./volumes/gcs-data:/data
+    networks:
+      - empsched-backend-network
+
 volumes:
   db_data:
   es_data:
