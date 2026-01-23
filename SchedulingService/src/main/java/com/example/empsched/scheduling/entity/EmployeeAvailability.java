@@ -21,7 +21,7 @@ import java.util.UUID;
                 )
         }
 )
-public class EmployeeAvailability extends AbstractEntity {
+public class EmployeeAvailability extends AbstractEntityGeneratedId {
 
     @ManyToOne
     @JoinColumn(name = "EMPLOYEE_ID")

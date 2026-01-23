@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Schedule extends AbstractEntity {
+public class Schedule extends AbstractEntityGeneratedId {
 
     private LocalDate startDate;
     private LocalDate endDate;

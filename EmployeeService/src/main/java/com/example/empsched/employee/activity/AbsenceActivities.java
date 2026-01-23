@@ -1,5 +1,6 @@
 package com.example.empsched.employee.activity;
 
+import com.example.empsched.employee.entity.Absence;
 import com.example.empsched.shared.dto.scheduling.CreateAvailabilityRequest;
 import com.example.empsched.shared.dto.scheduling.EmployeeAvailabilitiesResponse;
 import com.example.empsched.shared.util.RequestContext;
@@ -12,9 +13,17 @@ import java.util.UUID;
 public interface AbsenceActivities {
 
     @ActivityMethod
-    EmployeeAvailabilitiesResponse createEmployeeAbsences(final CreateAvailabilityRequest request, final RequestContext requestContext);
+    EmployeeAvailabilitiesResponse createEmployeeAbsencesInSchedulingService(final CreateAvailabilityRequest request, final RequestContext requestContext);
 
     @ActivityMethod
-    void deleteEmployeeAbsencesByEmployeeId(final UUID absenceId,
-                                            final RequestContext requestContext);
+    void deleteEmployeeAbsencesInSchedulingService(final UUID absenceId,
+                                                   final RequestContext requestContext);
+
+    @ActivityMethod
+    void approveAbsenceInEmployeeService(final UUID absenceId,
+                                         final RequestContext requestContext);
+
+    @ActivityMethod
+    void unapproveAbsenceInEmployeeService(final UUID absenceId,
+                                         final RequestContext requestContext);
 }

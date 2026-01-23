@@ -30,7 +30,7 @@ public class Employee extends AbstractEntity {
     @Column(name = "phone_number", length = 15)
     private String phoneNumber;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "position_id"),

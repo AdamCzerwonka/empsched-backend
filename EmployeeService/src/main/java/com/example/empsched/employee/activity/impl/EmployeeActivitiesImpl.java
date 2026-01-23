@@ -32,14 +32,14 @@ public class EmployeeActivitiesImpl implements EmployeeActivities {
     }
 
     @Override
-    public SchedulingEmployeeResponse createEmployeeInSchedulingService(CreateEmployeeRequest employee, RequestContext context) {
+    public SchedulingEmployeeResponse createEmployeeInSchedulingService(final CreateEmployeeRequest employee,final RequestContext context) {
         return schedulingServiceClient.createSchedulingEmployee(
                 employee, context
         ).getBody();
     }
 
     @Override
-    public void deleteEmployeeInSchedulingService(UUID employeeId, RequestContext context) {
+    public void deleteEmployeeInSchedulingService(final UUID employeeId,final RequestContext context) {
         schedulingServiceClient.deleteSchedulingEmployee(
                 employeeId, context
         );

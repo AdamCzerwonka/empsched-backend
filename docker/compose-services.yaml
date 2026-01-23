@@ -22,7 +22,7 @@ services:
       dockerfile: AuthService/Dockerfile
     restart: always
     ports:
-      - "${AUTH_APP_PORT}"
+      - "${AUTH_APP_MAPPED_PORT}:${AUTH_APP_PORT}"
     env_file:
       - .env.services
     networks:

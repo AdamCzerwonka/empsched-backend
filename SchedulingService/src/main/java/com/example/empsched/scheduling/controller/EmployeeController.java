@@ -27,7 +27,7 @@ public class EmployeeController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
-    public ResponseEntity<SchedulingEmployeeResponse> createEmployee(CreateEmployeeRequest createEmployeeRequestDTO) {
+    public ResponseEntity<SchedulingEmployeeResponse> createEmployee(@RequestBody CreateEmployeeRequest createEmployeeRequestDTO) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         return ResponseEntity.ok(dtoMapper.toDto(employeeService.createEmployee(requestMapper.toEntity(createEmployeeRequestDTO), organisationId)));
     }

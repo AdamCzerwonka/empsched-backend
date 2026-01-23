@@ -14,6 +14,7 @@ import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerR
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
 import com.example.empsched.shared.dto.position.PositionResponse;
+import com.example.empsched.shared.entity.AbstractEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -56,4 +57,8 @@ public interface DtoMapper {
     Absence mapToAbsence(CreateAbsenceRequest request);
 
     AbsenceResponse mapToAbsenceResponse(Absence absence);
+
+    default UUID entityToUuid(AbstractEntity entity) {
+        return entity != null ? entity.getId() : null;
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -25,4 +26,7 @@ public interface AbsenceRepository extends JpaRepository<Absence, UUID>, JpaSpec
     boolean hasEmployeeCollidingAbsences(UUID employeeId, LocalDate startDate, LocalDate endDate);
 
     void deleteByIdAndEmployeeIdAndApprovedFalse(UUID absenceId, UUID employeeId);
+
+    @Query("SELECT a FROM Absence a JOIN FETCH a.employee e WHERE a.id = :absenceId AND e.organisation.id = :organisationId")
+    Optional<Absence> findByIdWithEmployee(UUID absenceId, UUID organisationId);
 }

@@ -6,6 +6,20 @@ spring:
     username: empshed
     password: empshed
     driver-class-name: org.postgresql.Driver
+  temporal:
+    connection:
+      target: localhost:7233
+    workers:
+      - name: organisation-management-worker
+        task-queue: TASK_QUEUE_ORGANISATION_MANAGEMENT
+      - name: position-management-worker
+        task-queue: TASK_QUEUE_POSITION_MANAGEMENT
+    workers-auto-discovery:
+      packages:
+        - com.example.empsched.organisation.workflow
+        - com.example.empsched.organisation.workflow.impl
+        - com.example.empsched.organisation.activity
+        - com.example.empsched.organisation.activity.impl
 eureka:
   client:
     service-url:

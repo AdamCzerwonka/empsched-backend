@@ -18,7 +18,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Shift extends AbstractEntity {
+public class Shift extends AbstractEntityGeneratedId {
 
     @Column(nullable = false, name = "start_time")
     private LocalDateTime startTime;

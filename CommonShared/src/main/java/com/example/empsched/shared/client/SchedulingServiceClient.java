@@ -10,6 +10,7 @@ import com.example.empsched.shared.dto.scheduling.EmployeeAvailabilitiesResponse
 import com.example.empsched.shared.dto.scheduling.SchedulingEmployeeResponse;
 import com.example.empsched.shared.util.RequestContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -18,13 +19,14 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class SchedulingServiceClient {
     private static final ServiceType SERVICE_TYPE = ServiceType.SCHEDULING;
 
     private final ServiceClient serviceClient;
 
     public ResponseEntity<OrganisationResponse> createOrganisationWithOwner(final CreateOrganisationRequest request) {
-        return serviceClient.sendRequest(SERVICE_TYPE, "/organisations/", HttpMethod.POST, request, OrganisationResponse.class);
+        return serviceClient.sendRequest(SERVICE_TYPE, "/organisations", HttpMethod.POST, request, OrganisationResponse.class);
     }
 
     public ResponseEntity<Void> deleteOrganisation(final UUID id) {
@@ -40,7 +42,7 @@ public class SchedulingServiceClient {
     }
 
     public ResponseEntity<EmployeeAvailabilitiesResponse> createEmployeeAvailabilities(final CreateAvailabilityRequest request, final RequestContext context) {
-        return serviceClient.sendRequest(SERVICE_TYPE, "/availabilities/", HttpMethod.GET, request,
+        return serviceClient.sendRequest(SERVICE_TYPE, "/availabilities", HttpMethod.POST, request,
                 EmployeeAvailabilitiesResponse.class
                 , context);
     }
@@ -52,7 +54,7 @@ public class SchedulingServiceClient {
     }
 
     public ResponseEntity<SchedulingEmployeeResponse> createSchedulingEmployee(final CreateEmployeeRequest employeeResponse, final RequestContext context) {
-        return serviceClient.sendRequest(SERVICE_TYPE, "/employees/", HttpMethod.POST, employeeResponse,
+        return serviceClient.sendRequest(SERVICE_TYPE, "/employees", HttpMethod.POST, employeeResponse,
                 SchedulingEmployeeResponse.class
                 , context);
     }

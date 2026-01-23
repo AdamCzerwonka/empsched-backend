@@ -47,7 +47,7 @@ public class OrganisationActivitiesImpl implements OrganisationActivities {
     }
 
     @Override
-    public OrganisationResponse createOrganisationInSchedulingService(CreateOrganisationRequest request) {
+    public OrganisationResponse createOrganisationInSchedulingService(final CreateOrganisationRequest request) {
         return schedulingServiceClient.createOrganisationWithOwner(
                 request
         ).getBody();
