@@ -2,6 +2,7 @@ package com.example.empsched.employee.activity;
 
 import com.example.empsched.shared.dto.user.CreateUserRequest;
 import com.example.empsched.shared.dto.user.UserResponse;
+import com.example.empsched.shared.util.RequestContext;
 import io.temporal.activity.ActivityInterface;
 import io.temporal.activity.ActivityMethod;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 @ActivityInterface
 public interface UserActivities {
     @ActivityMethod
-    UserResponse createUserInAuthService(final CreateUserRequest request);
+    UserResponse createUserInAuthService(final CreateUserRequest request, final RequestContext context);
 
     @ActivityMethod
     void deleteUserInAuthService(final UUID id);

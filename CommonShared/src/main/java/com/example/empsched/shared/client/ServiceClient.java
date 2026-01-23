@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -43,6 +44,7 @@ public class ServiceClient {
 
     private HttpHeaders prepareHeaders(final RequestContext requestContext) {
         final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
         if (requestContext != null) {
             if (requestContext.getAuthorizationHeader() != null) {
                 headers.set(HttpHeaders.AUTHORIZATION, requestContext.getAuthorizationHeader());
