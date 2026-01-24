@@ -11,10 +11,12 @@ import com.example.empsched.shared.dto.scheduling.SchedulingEmployeeResponse;
 import com.example.empsched.shared.util.RequestContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -63,6 +65,27 @@ public class SchedulingServiceClient {
         return serviceClient.sendRequest(SERVICE_TYPE, "/employees/" + employeeId, HttpMethod.DELETE, null, Void.class, context);
     }
 
-    // TODO: Assign position to employee and remove position from employee methods
+    public ResponseEntity<List<PositionResponse>> addPositionToEmployee(final UUID employeeId, final UUID positionId, final RequestContext context) {
+        return serviceClient.sendRequest(
+                SERVICE_TYPE,
+                "/positions/" + positionId + "/employees/" + employeeId,
+                HttpMethod.POST,
+                null,
+                new ParameterizedTypeReference<>() {
+                },
+                context
+        );
+    }
 
+    public ResponseEntity<List<PositionResponse>> removePositionFromEmployee(final UUID employeeId, final UUID positionId, final RequestContext context) {
+        return serviceClient.sendRequest(
+                SERVICE_TYPE,
+                "/positions/" + positionId + "/employees/" + employeeId,
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<>() {
+                },
+                context
+        );
+    }
 }

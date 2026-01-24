@@ -3,9 +3,16 @@ package com.example.empsched.employee.controller;
 import com.example.empsched.employee.entity.Position;
 import com.example.empsched.employee.mapper.DtoMapper;
 import com.example.empsched.employee.service.PositionService;
+import com.example.empsched.employee.util.WorkflowTasks;
+import com.example.empsched.employee.workflow.AssignEmployeePositionWorkflow;
+import com.example.empsched.employee.workflow.RemoveEmployeePositionWorkflow;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
+import com.example.empsched.shared.dto.position.EmployeePositionChangeRequest;
 import com.example.empsched.shared.dto.position.PositionResponse;
 import com.example.empsched.shared.util.CredentialsExtractor;
+import com.example.empsched.shared.util.RequestContext;
+import io.temporal.client.WorkflowClient;
+import io.temporal.client.WorkflowOptions;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +32,7 @@ import java.util.UUID;
 public class PositionController {
     private final PositionService positionService;
     private final DtoMapper mapper;
+    private final WorkflowClient client;
 
     @PostMapping()
     @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
@@ -46,17 +54,27 @@ public class PositionController {
     @PostMapping("/{positionId}/employees/{employeeId}")
     @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<List<PositionResponse>> addPositionToEmployee(@PathVariable final UUID employeeId, @PathVariable final UUID positionId) {
-        final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
-        final List<Position> positions = positionService.addPositionToEmployee(organisationId, employeeId, positionId);
-        return ResponseEntity.status(HttpStatus.OK).body(positions.stream().map(mapper::mapToPositionResponse).toList());
+        final WorkflowOptions options = WorkflowOptions.newBuilder()
+                .setWorkflowId(UUID.randomUUID().toString())
+                .setTaskQueue(WorkflowTasks.TASK_QUEUE_EMPLOYEE_POSITION_MANAGEMENT)
+                .build();
+
+        final AssignEmployeePositionWorkflow workflow = client.newWorkflowStub(AssignEmployeePositionWorkflow.class, options);
+        final List<PositionResponse> positions = workflow.assign(new EmployeePositionChangeRequest(employeeId, positionId), new RequestContext());
+        return ResponseEntity.status(HttpStatus.OK).body(positions);
     }
 
     @DeleteMapping("/{positionId}/employees/{employeeId}")
     @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<List<PositionResponse>> removePositionFromEmployee(@PathVariable final UUID employeeId, @PathVariable final UUID positionId) {
-        final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
-        final List<Position> positions = positionService.removePositionFromEmployee(organisationId, employeeId, positionId);
-        return ResponseEntity.status(HttpStatus.OK).body(positions.stream().map(mapper::mapToPositionResponse).toList());
+        final WorkflowOptions options = WorkflowOptions.newBuilder()
+                .setWorkflowId(UUID.randomUUID().toString())
+                .setTaskQueue(WorkflowTasks.TASK_QUEUE_EMPLOYEE_POSITION_MANAGEMENT)
+                .build();
+
+        final RemoveEmployeePositionWorkflow workflow = client.newWorkflowStub(RemoveEmployeePositionWorkflow.class, options);
+        final List<PositionResponse> positions = workflow.remove(new EmployeePositionChangeRequest(employeeId, positionId), new RequestContext());
+        return ResponseEntity.status(HttpStatus.OK).body(positions);
     }
 
     @DeleteMapping("/{positionId}")

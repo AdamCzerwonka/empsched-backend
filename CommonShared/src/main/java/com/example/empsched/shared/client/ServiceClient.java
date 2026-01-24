@@ -4,6 +4,7 @@ import com.example.empsched.shared.util.RequestContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -35,6 +36,21 @@ public class ServiceClient {
     }
 
     public <T, R> ResponseEntity<R> sendRequest(final ServiceType service, final String path, final HttpMethod method, final T payload, final Class<R> responseType, final RequestContext requestContext) {
+        final String serviceUrl = getServiceUrl(service);
+        final String url = serviceUrl + path;
+
+        final HttpHeaders headers = prepareHeaders(requestContext);
+        final HttpEntity<T> requestEntity = new HttpEntity<>(payload, headers);
+
+        return restTemplate.exchange(url, method, requestEntity, responseType);
+    }
+
+    public <T, R> ResponseEntity<R> sendRequest(final ServiceType service,
+                                                final String path,
+                                                final HttpMethod method,
+                                                final T payload,
+                                                final ParameterizedTypeReference<R> responseType,
+                                                final RequestContext requestContext) {
         final String serviceUrl = getServiceUrl(service);
         final String url = serviceUrl + path;
 

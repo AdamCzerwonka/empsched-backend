@@ -26,6 +26,8 @@ spring:
         task-queue: TASK_QUEUE_EMPLOYEE_MANAGEMENT
       - name: absence-management-worker
         task-queue: TASK_QUEUE_ABSENCE_MANAGEMENT
+      - name: employee-position-management-worker
+        task-queue: TASK_QUEUE_EMPLOYEE_POSITION_MANAGEMENT
     workers-auto-discovery:
       packages:
         - com.example.empsched.employee.workflow
