@@ -3,6 +3,7 @@ package com.example.empsched.employee.controller;
 import com.example.empsched.employee.dto.absence.AbsenceFilterParams;
 import com.example.empsched.employee.dto.absence.AbsenceResponse;
 import com.example.empsched.employee.dto.absence.CreateAbsenceRequest;
+import com.example.empsched.employee.dto.absence.ExtendedAbsenceFilterParams;
 import com.example.empsched.employee.entity.Absence;
 import com.example.empsched.employee.mapper.DtoMapper;
 import com.example.empsched.employee.service.AbsenceService;
@@ -42,6 +43,20 @@ public class AbsenceController {
     private final WorkflowClient client;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    public ResponseEntity<PagedResponse<AbsenceResponse>> getAllAbsences(@Valid final ExtendedAbsenceFilterParams filterParams) {
+        final Pageable pageable = baseMapper.mapToPageable(filterParams, Sort.by("startDate").ascending());
+        final Page<Absence> absences = absenceService.getAllAbsences(
+                CredentialsExtractor.getOrganisationIdFromContext(),
+                filterParams.getStartFrom(),
+                filterParams.getStartTo(),
+                filterParams.isApproved(),
+                pageable
+        );
+        return ResponseEntity.ok(baseMapper.mapToPagedResponse(absences, dtoMapper::mapToAbsenceResponse));
+    }
+
+    @GetMapping("/self")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PagedResponse<AbsenceResponse>> getSelfAbsences(@Valid final AbsenceFilterParams filterParams) {
         final UUID employeeId = CredentialsExtractor.getUserIdFromContext();
