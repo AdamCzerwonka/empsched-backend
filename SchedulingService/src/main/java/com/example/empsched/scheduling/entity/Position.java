@@ -15,9 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Position extends AbstractEntity {
 
-    @Column(name = "position_name")
-    private String positionName;
-
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, updatable = false)
     private Organisation organisation;

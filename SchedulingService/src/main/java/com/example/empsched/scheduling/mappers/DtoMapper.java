@@ -35,6 +35,7 @@ public interface DtoMapper {
 
     ScheduleResponse toDto(Schedule schedule);
 
+    @Mapping(target = "assignedEmployee", source = "assignedEmployee")
     ShiftResponse toDto(Shift shift);
 
     List<ShiftResponse> toShiftDtoList(List<Shift> shifts);
@@ -42,6 +43,7 @@ public interface DtoMapper {
     EmployeeAvailabilityResponse toResponse(EmployeeAvailability entity);
 
     List<EmployeeAvailabilityResponse> toAvailabilityResponseList(List<EmployeeAvailability> entities);
+
 
     default UUID entityToUuid(AbstractEntity entity) {
         return entity != null ? entity.getId() : null;
