@@ -32,6 +32,10 @@ spring:
         - com.example.empsched.employee.workflow.impl
         - com.example.empsched.employee.activity
         - com.example.empsched.employee.activity.impl
+  servlet:
+    multipart:
+      max-file-size: ${MULTIPART_MAX_FILE_SIZE}
+      max-request-size: ${MULTIPART_MAX_REQUEST_SIZE}
 eureka:
   client:
     service-url:
@@ -67,3 +71,8 @@ services:
     url: ${EMPLOYEE_SERVICE_URL:http://localhost:9002}
   scheduling:
     url: ${SCHEDULING_SERVICE_URL:http://localhost:9005}
+gcs:
+  bucket:
+    name: ${GCS_BUCKET_NAME}
+  project-id: ${GCS_PROJECT_ID}
+  mock-host: ${GCS_MOCK_HOST}

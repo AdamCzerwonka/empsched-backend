@@ -53,7 +53,7 @@ public class CreateEmployeeWorkflowImpl implements CreateEmployeeWorkflow {
             final Employee employee = employeeActivities.createEmployeeInEmployeeService(dtoMapper.mapToEmployee(createEmployeeRequest), context);
 
             saga.addCompensation(() -> userActivities.deleteUserInAuthService(employeeId));
-            userActivities.createUserInAuthService(createUserRequest);
+            userActivities.createUserInAuthService(createUserRequest, context);
 
             saga.addCompensation(() -> employeeActivities.deleteEmployeeInSchedulingService(employeeId, context));
             employeeActivities.createEmployeeInSchedulingService(createEmployeeRequest, context);

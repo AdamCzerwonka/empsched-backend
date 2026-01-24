@@ -4,7 +4,6 @@ import com.example.empsched.organisation.entity.Organisation;
 import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
 import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerRequest;
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
-import com.example.empsched.shared.util.RequestContext;
 import io.temporal.activity.ActivityInterface;
 import io.temporal.activity.ActivityMethod;
 

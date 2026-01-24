@@ -4,6 +4,7 @@ import com.example.empsched.employee.entity.Employee;
 import com.example.empsched.employee.mapper.DtoMapper;
 import com.example.empsched.employee.service.EmployeeService;
 import com.example.empsched.employee.util.WorkflowTasks;
+import com.example.empsched.employee.validation.ValidPicture;
 import com.example.empsched.employee.workflow.CreateEmployeeWorkflow;
 import com.example.empsched.shared.dto.employee.CreateEmployeeRequest;
 import com.example.empsched.shared.dto.employee.EmployeeResponse;
@@ -16,6 +17,8 @@ import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,7 +27,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -32,6 +37,7 @@ import java.util.UUID;
 @RequestMapping("/employees")
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.NEVER)
+@Validated
 public class EmployeeController {
     private final EmployeeService employeeService;
     private final DtoMapper mapper;
@@ -69,5 +75,26 @@ public class EmployeeController {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         employeeService.deleteEmployee(employeeId, organisationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/profile-picture")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Resource> getSelfProfilePicture() {
+        final UUID employeeId = CredentialsExtractor.getUserIdFromContext();
+        final byte[] pictureData = employeeService.getProfilePictureOfEmployee(employeeId);
+        final ByteArrayResource resource = new ByteArrayResource(pictureData);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .contentLength(pictureData.length)
+                .body(resource);
+    }
+
+    @PostMapping("/profile-picture")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<EmployeeResponse> updateProfilePictureToEmployee(
+            @RequestParam("file") @ValidPicture final MultipartFile pictureData) {
+        final UUID employeeId = CredentialsExtractor.getUserIdFromContext();
+        final Employee updatedEmployee = employeeService.updateProfilePictureToEmployee(employeeId, pictureData);
+        return ResponseEntity.ok(mapper.mapToEmployeeResponse(updatedEmployee));
     }
 }

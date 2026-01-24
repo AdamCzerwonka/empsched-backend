@@ -41,6 +41,9 @@ public class Employee extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Organisation organisation;
 
+    @Column(name = "profile_picture_path")
+    private String profilePicturePath;
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
