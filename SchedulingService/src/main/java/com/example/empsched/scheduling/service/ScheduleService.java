@@ -1,17 +1,12 @@
 package com.example.empsched.scheduling.service;
 
 import com.example.empsched.scheduling.dto.ScheduleGenerationRequest;
-import com.example.empsched.scheduling.entity.Schedule;
-import com.example.empsched.scheduling.entity.ScheduleStatus;
-import com.example.empsched.scheduling.entity.Shift;
+import com.example.empsched.scheduling.entity.*;
 import com.example.empsched.scheduling.exceptions.OrganisationNotFound;
 import com.example.empsched.scheduling.exceptions.ScheduleNotFound;
-import com.example.empsched.scheduling.repository.OrganisationRepository;
-import com.example.empsched.scheduling.repository.ScheduleRepository;
-import com.example.empsched.scheduling.repository.ShiftRepository;
+import com.example.empsched.scheduling.repository.*;
 import com.example.empsched.scheduling.solver.WorkSchedule;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +23,8 @@ public class ScheduleService {
     private final ShiftGeneratorService shiftGeneratorService;
     private final OrganisationRepository organisationRepository;
     private final ShiftRepository shiftRepository;
+    private final EmployeeRepository employeeRepository;
+    private final EmployeeAvailabilityRepository availabilityRepository;
 
     public Schedule createDraftSchedule(final ScheduleGenerationRequest requestDTO,final UUID organisationId) {
         final Schedule schedule = new Schedule();
@@ -57,5 +54,15 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new ScheduleNotFound(scheduleId));
         schedule.setStatus(status);
         return scheduleRepository.save(schedule);
+    }
+
+    @Transactional(readOnly = true)
+    public WorkSchedule loadProblem(final UUID scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow();
+        List<Employee> employees = employeeRepository.findAllByOrganisationId(schedule.getOrganisation().getId());
+        List<Shift> shifts = shiftRepository.findAllByScheduleId(scheduleId);
+        List<EmployeeAvailability> availabilities = availabilityRepository
+                .findAllByDateBetween(schedule.getStartDate(), schedule.getEndDate());
+        return new WorkSchedule(scheduleId, employees, shifts, availabilities);
     }
 }
