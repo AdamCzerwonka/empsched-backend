@@ -1,6 +1,7 @@
 package com.example.empsched.organisation.activity;
 
 import com.example.empsched.organisation.entity.Organisation;
+import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
 import com.example.empsched.shared.dto.organisation.CreateOrganisationWithOwnerRequest;
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import io.temporal.activity.ActivityInterface;
@@ -22,4 +23,10 @@ public interface OrganisationActivities {
 
     @ActivityMethod
     void deleteOrganisationInOrganisationService(final UUID id);
+
+    @ActivityMethod
+    OrganisationResponse createOrganisationInSchedulingService(final CreateOrganisationRequest request);
+
+    @ActivityMethod
+    void deleteOrganisationInSchedulingService(final UUID organisationId);
 }

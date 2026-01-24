@@ -6,11 +6,18 @@ import com.example.empsched.employee.dto.absence.CreateAbsenceRequest;
 import com.example.empsched.employee.entity.Absence;
 import com.example.empsched.employee.mapper.DtoMapper;
 import com.example.empsched.employee.service.AbsenceService;
+import com.example.empsched.employee.util.WorkflowTasks;
+import com.example.empsched.employee.workflow.ApproveAbsenceWorkflow;
 import com.example.empsched.shared.dto.page.PagedResponse;
+import com.example.empsched.shared.dto.scheduling.CreateAvailabilityRequest;
 import com.example.empsched.shared.mapper.BaseMapper;
 import com.example.empsched.shared.util.CredentialsExtractor;
+import com.example.empsched.shared.util.RequestContext;
+import io.temporal.client.WorkflowClient;
+import io.temporal.client.WorkflowOptions;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,10 +34,12 @@ import java.util.UUID;
 @RequestMapping("/absences")
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.NEVER)
+@Slf4j
 public class AbsenceController {
     private final AbsenceService absenceService;
     private final DtoMapper dtoMapper;
     private final BaseMapper baseMapper;
+    private final WorkflowClient client;
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
@@ -72,6 +81,22 @@ public class AbsenceController {
     public ResponseEntity<Void> deleteSelfAbsence(@PathVariable final UUID absenceId) {
         final UUID employeeId = CredentialsExtractor.getUserIdFromContext();
         absenceService.deleteAbsence(absenceId, employeeId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{absenceId}/approved")
+    @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
+    public ResponseEntity<Void> approveAbsence(@PathVariable final UUID absenceId) {
+        final Absence absenceToApprove = absenceService.getAbsenceById(absenceId, CredentialsExtractor.getOrganisationIdFromContext());
+        final WorkflowOptions options = WorkflowOptions.newBuilder()
+                .setWorkflowId(UUID.randomUUID().toString())
+                .setTaskQueue(WorkflowTasks.TASK_QUEUE_ABSENCE_MANAGEMENT)
+                .build();
+        final ApproveAbsenceWorkflow workflow = client.newWorkflowStub(ApproveAbsenceWorkflow.class, options);
+        workflow.approveAbsence(new CreateAvailabilityRequest(
+                absenceToApprove.getStartDate(),
+                absenceToApprove.getEndDate(),false, absenceToApprove.getEmployee().getId(), absenceToApprove.getId()
+        ), new RequestContext());
         return ResponseEntity.noContent().build();
     }
 }

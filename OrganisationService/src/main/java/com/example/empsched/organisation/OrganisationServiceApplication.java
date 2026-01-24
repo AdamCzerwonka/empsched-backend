@@ -3,6 +3,7 @@ package com.example.empsched.organisation;
 import com.example.empsched.shared.aspect.ActivityErrorHandlingAspect;
 import com.example.empsched.shared.client.AuthServiceClient;
 import com.example.empsched.shared.client.EmployeeServiceClient;
+import com.example.empsched.shared.client.SchedulingServiceClient;
 import com.example.empsched.shared.client.ServiceClient;
 import com.example.empsched.shared.configuration.BaseSecurityConfig;
 import com.example.empsched.shared.configuration.MapperConfiguration;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Import;
         RestConfig.class,
         ServiceClient.class,
         EmployeeServiceClient.class,
+        SchedulingServiceClient.class,
         AuthServiceClient.class,
         ActivityErrorHandlingAspect.class,
         MapperConfiguration.class

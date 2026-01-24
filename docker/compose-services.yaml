@@ -22,7 +22,7 @@ services:
       dockerfile: AuthService/Dockerfile
     restart: always
     ports:
-      - "${AUTH_APP_PORT}"
+      - "${AUTH_APP_MAPPED_PORT}:${AUTH_APP_PORT}"
     env_file:
       - .env.services
     networks:
@@ -66,6 +66,21 @@ services:
     restart: always
     ports:
       - "${ORGANISATION_APP_MAPPED_PORT}:${ORGANISATION_APP_PORT}"
+    env_file:
+      - .env.services
+    networks:
+      - empsched-backend-network
+    depends_on:
+      - eureka
+
+  scheduling:
+    build:
+      context: ..
+      dockerfile: SchedulingService/Dockerfile
+    container_name: scheduling
+    restart: always
+    ports:
+      - "${SCHEDULING_APP_MAPPED_PORT}:${SCHEDULING_APP_PORT}"
     env_file:
       - .env.services
     networks:
