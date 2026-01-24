@@ -31,6 +31,13 @@ public class AbsenceServiceImpl implements AbsenceService {
     private final EmployeeRepository employeeRepository;
 
     @Override
+    public Page<Absence> getAllAbsences(final UUID organisationId, final LocalDate startFrom, final LocalDate startTo, final boolean approved, final Pageable pageable) {
+        BaseThrowChecks.checkDateValidity(startFrom, startTo);
+        Specification<Absence> specification = AbsenceSpecification.filterByOrganisationAndDateAndApprovalStatus(organisationId, startFrom, startTo, approved);
+        return absenceRepository.findAll(specification, pageable);
+    }
+
+    @Override
     public Page<Absence> getAbsencesForEmployee(final UUID employeeId, final LocalDate startFrom, final LocalDate startTo, final Pageable pageable) {
         BaseThrowChecks.checkDateValidity(startFrom, startTo);
         Specification<Absence> specification = AbsenceSpecification.filterByEmployeeIdAndOverlappingDates(employeeId, startFrom, startTo);

@@ -28,4 +28,22 @@ public class AbsenceSpecification {
             return predicates;
         };
     }
+
+    public static Specification<Absence> filterByOrganisationAndDateAndApprovalStatus(final @NonNull UUID organisationId, final @Nullable LocalDate startFrom, final @Nullable LocalDate startTo, final boolean approved) {
+        return (root, query, criteriaBuilder) -> {
+            Predicate predicates = criteriaBuilder.equal(root.get("employee").get("organisation").get("id"), organisationId);
+
+            if (startFrom != null) {
+                predicates = criteriaBuilder.and(predicates, criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), startFrom));
+            }
+
+            if (startTo != null) {
+                predicates = criteriaBuilder.and(predicates, criteriaBuilder.lessThanOrEqualTo(root.get("startDate"), startTo));
+            }
+
+            predicates = criteriaBuilder.and(predicates, criteriaBuilder.equal(root.get("approved"), approved));
+
+            return predicates;
+        };
+    }
 }
