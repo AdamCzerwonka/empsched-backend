@@ -6,7 +6,9 @@ public enum SchedulingErrorCodes implements ErrorCode {
     EMPLOYEE_NOT_FOUND("scheduling.employee.not.found"),
     POSITION_NOT_FOUND("scheduling.position.not.found"),
     ORGANISATION_NOT_FOUND("scheduling.organisation.not.found"),
-    EMPLOYEE_LIMIT_REACHED("scheduling.employee.limit.reached")
+    EMPLOYEE_LIMIT_REACHED("scheduling.employee.limit.reached"),
+    NOT_ORGANISATION_OWNER("scheduling.not.organisation.owner"),
+    SCHEDULE_NOT_FOUND("scheduling.schedule.not.found"),
     ;
 
     private final String key;

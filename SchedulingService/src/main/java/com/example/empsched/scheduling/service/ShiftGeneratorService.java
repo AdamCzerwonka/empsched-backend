@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class ShiftGeneratorService {
 
-    public List<Shift> generateShiftsFromRequest(Schedule schedule, ScheduleGenerationRequest request) {
+    public List<Shift> generateShiftsFromRequest(final Schedule schedule, final ScheduleGenerationRequest request) {
         List<Shift> newShifts = new ArrayList<>();
         LocalDate currentDate = request.startDate();
         LocalDate endDate = request.endDate();
@@ -35,7 +35,7 @@ public class ShiftGeneratorService {
         return newShifts;
     }
 
-    private List<ShiftDefinition> getDefinitionsForDate(LocalDate date, ScheduleGenerationRequest request) {
+    private List<ShiftDefinition> getDefinitionsForDate(final LocalDate date, final ScheduleGenerationRequest request) {
         if (request.dateOverrides() != null && request.dateOverrides().containsKey(date)) {
             return request.dateOverrides().get(date);
         }
@@ -47,7 +47,7 @@ public class ShiftGeneratorService {
         return Collections.emptyList();
     }
 
-    private List<Shift> createShiftsFromDefinition(Schedule schedule, LocalDate date, ShiftDefinition def) {
+    private List<Shift> createShiftsFromDefinition(final Schedule schedule, final LocalDate date, final ShiftDefinition def) {
         List<Shift> shifts = new ArrayList<>();
 
         if (def.shiftRequirements() == null) return shifts;

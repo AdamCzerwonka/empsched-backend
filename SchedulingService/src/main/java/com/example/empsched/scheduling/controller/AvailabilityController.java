@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -16,6 +18,7 @@ import java.util.UUID;
 @Slf4j
 @RequestMapping("/availabilities")
 @RequiredArgsConstructor
+@Transactional(propagation = Propagation.NEVER)
 public class AvailabilityController {
 
     private final EmployeeAvailabilityService employeeAvailabilityService;
@@ -23,20 +26,20 @@ public class AvailabilityController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
-    public ResponseEntity<EmployeeAvailabilitiesResponse> createAvailability(@RequestBody CreateAvailabilityRequest createAvailabilityDTO) {
+    public ResponseEntity<EmployeeAvailabilitiesResponse> createAvailability(@RequestBody final CreateAvailabilityRequest createAvailabilityDTO) {
         return ResponseEntity.ok(new EmployeeAvailabilitiesResponse(dtoMapper.toAvailabilityResponseList(employeeAvailabilityService.createEmployeeAvailabilities(createAvailabilityDTO))));
     }
 
     @GetMapping("/{employeeId}")
     @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
-    public ResponseEntity<EmployeeAvailabilitiesResponse> getAvailabilities(@PathVariable UUID employeeId) {
+    public ResponseEntity<EmployeeAvailabilitiesResponse> getAvailabilities(@PathVariable final UUID employeeId) {
         return ResponseEntity.ok(new EmployeeAvailabilitiesResponse(dtoMapper.toAvailabilityResponseList(employeeAvailabilityService.getEmployeeAvailability(employeeId))));
     }
 
     @DeleteMapping("/absences/{absenceId}")
     @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<Void> deleteAvailability(
-            @PathVariable UUID absenceId
+            @PathVariable final UUID absenceId
     ) {
         employeeAvailabilityService.deleteEmployeeUnavailability(absenceId);
         return ResponseEntity.noContent().build();

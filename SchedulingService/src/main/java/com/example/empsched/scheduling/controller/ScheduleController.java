@@ -10,6 +10,8 @@ import com.example.empsched.shared.util.CredentialsExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -17,6 +19,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/schedules")
 @RequiredArgsConstructor
+@Transactional(propagation = Propagation.NEVER)
 public class ScheduleController {
 
     private final ScheduleSolverService schedulingService;
@@ -25,21 +28,21 @@ public class ScheduleController {
 
     @PostMapping("/draft")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ScheduleResponse> createDraftSchedule(@RequestBody ScheduleGenerationRequest request) {
+    public ResponseEntity<ScheduleResponse> createDraftSchedule(@RequestBody final ScheduleGenerationRequest request) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
-        Schedule draft = scheduleService.createDraftSchedule(request, organisationId);
+        final Schedule draft = scheduleService.createDraftSchedule(request, organisationId);
         return ResponseEntity.ok(dtoMapper.toDto(draft));
     }
 
     @GetMapping("/{scheduleId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ScheduleResponse> getSchedule(@PathVariable("scheduleId") UUID scheduleId) {
+    public ResponseEntity<ScheduleResponse> getSchedule(@PathVariable("scheduleId") final UUID scheduleId) {
         return ResponseEntity.ok(dtoMapper.toDto(scheduleService.getScheduleById(scheduleId)));
     }
 
     @PostMapping("/solve/{scheduleId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Void> solveSchedule(@PathVariable("scheduleId") UUID scheduleId) {
+    public ResponseEntity<Void> solveSchedule(@PathVariable("scheduleId") final UUID scheduleId) {
         schedulingService.solveSchedule(scheduleId);
         return ResponseEntity.ok().build();
     }

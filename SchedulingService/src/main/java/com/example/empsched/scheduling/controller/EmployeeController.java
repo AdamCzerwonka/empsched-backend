@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/employees")
+@Transactional(propagation = Propagation.NEVER)
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -27,14 +30,14 @@ public class EmployeeController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
-    public ResponseEntity<SchedulingEmployeeResponse> createEmployee(@RequestBody CreateEmployeeRequest createEmployeeRequestDTO) {
+    public ResponseEntity<SchedulingEmployeeResponse> createEmployee(@RequestBody final CreateEmployeeRequest createEmployeeRequestDTO) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         return ResponseEntity.ok(dtoMapper.toDto(employeeService.createEmployee(requestMapper.toEntity(createEmployeeRequestDTO), organisationId)));
     }
 
     @DeleteMapping("/{employeeId}")
     @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable UUID employeeId) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable final UUID employeeId) {
         final UUID organisationId = CredentialsExtractor.getOrganisationIdFromContext();
         employeeService.deleteEmployee(employeeId, organisationId);
         return ResponseEntity.noContent().build();

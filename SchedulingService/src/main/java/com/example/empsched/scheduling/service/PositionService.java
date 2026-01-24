@@ -13,6 +13,8 @@ import com.example.empsched.shared.util.BaseThrowChecks;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class PositionService {
 
     private final PositionRepository positionRepository;
@@ -33,9 +36,9 @@ public class PositionService {
         return positionRepository.save(position);
     }
 
-    public void deletePosition(UUID positionId, UUID callerOrganisationId) {
+    public void deletePosition(final UUID positionId, final UUID callerOrganisationId) {
         Optional<Position> position = positionRepository.findById(positionId);
-        if (position.isEmpty()) return; // Throw exception?
+        if (position.isEmpty()) return;
         // TODO add checks for linked employees (?)
         BaseThrowChecks.throwIfNotRelated(callerOrganisationId, position.get().getOrganisation().getId());
         positionRepository.deleteById(positionId);
@@ -59,7 +62,7 @@ public class PositionService {
         return employeeRepository.save(employee).getPositions().stream().toList();
     }
 
-    public List<Position> removePositionFromEmployee(UUID callerOrganisationId, UUID employeeId, UUID positionId) {
+    public List<Position> removePositionFromEmployee(final UUID callerOrganisationId, final UUID employeeId, final UUID positionId) {
         final Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found: " + employeeId));
         BaseThrowChecks.throwIfNotRelated(callerOrganisationId, employee.getOrganisation().getId());

@@ -2,12 +2,7 @@ package com.example.empsched.scheduling.mappers;
 
 import com.example.empsched.scheduling.dto.ScheduleResponse;
 import com.example.empsched.scheduling.dto.ShiftResponse;
-import com.example.empsched.scheduling.entity.Employee;
-import com.example.empsched.scheduling.entity.EmployeeAvailability;
-import com.example.empsched.scheduling.entity.Organisation;
-import com.example.empsched.scheduling.entity.Position;
-import com.example.empsched.scheduling.entity.Schedule;
-import com.example.empsched.scheduling.entity.Shift;
+import com.example.empsched.scheduling.entity.*;
 import com.example.empsched.shared.configuration.BaseMapperConfig;
 import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import com.example.empsched.shared.dto.position.PositionResponse;
@@ -49,6 +44,9 @@ public interface DtoMapper {
     List<EmployeeAvailabilityResponse> toAvailabilityResponseList(List<EmployeeAvailability> entities);
 
     default UUID entityToUuid(AbstractEntity entity) {
+        return entity != null ? entity.getId() : null;
+    }
+    default UUID entityToUuid(AbstractEntityGeneratedId entity) {
         return entity != null ? entity.getId() : null;
     }
 }
