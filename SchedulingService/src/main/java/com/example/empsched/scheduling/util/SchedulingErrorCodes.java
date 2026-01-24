@@ -9,6 +9,7 @@ public enum SchedulingErrorCodes implements ErrorCode {
     EMPLOYEE_LIMIT_REACHED("scheduling.employee.limit.reached"),
     NOT_ORGANISATION_OWNER("scheduling.not.organisation.owner"),
     SCHEDULE_NOT_FOUND("scheduling.schedule.not.found"),
+    SHIFT_NOT_FOUND("scheduling.shift.not.found")
     ;
 
     private final String key;

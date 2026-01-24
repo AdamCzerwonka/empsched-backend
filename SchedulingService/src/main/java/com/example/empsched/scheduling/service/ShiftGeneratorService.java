@@ -3,6 +3,7 @@ package com.example.empsched.scheduling.service;
 import com.example.empsched.scheduling.dto.ScheduleGenerationRequest;
 import com.example.empsched.scheduling.dto.ShiftDefinition;
 import com.example.empsched.scheduling.dto.ShiftRequirement;
+import com.example.empsched.scheduling.entity.Position;
 import com.example.empsched.scheduling.entity.Schedule;
 import com.example.empsched.scheduling.entity.Shift;
 import org.springframework.stereotype.Service;
