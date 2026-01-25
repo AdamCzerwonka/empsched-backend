@@ -15,9 +15,10 @@ spring:
           globalcors:
             cors-configurations:
               '[/**]':
-                allowed-origin-patterns:
+                allowed-origins:
                   - "http://localhost:5173"
-                  - "https://*.ngrok-free.dev"
+                  - "http://localhost:4173"
+                  - "https://cuneate-aphidious-clement.ngrok-free.dev"
                 allowed-methods:
                   - "*"
                 allowed-headers:
