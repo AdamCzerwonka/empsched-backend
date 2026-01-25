@@ -1,7 +1,7 @@
 name: CI Employee Service
 on:
     workflow_dispatch:
-    push:
+    pull_request:
         paths:
             - "EmployeeService/**"
             - "CommonShared/**"
