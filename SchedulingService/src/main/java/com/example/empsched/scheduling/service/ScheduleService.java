@@ -7,6 +7,8 @@ import com.example.empsched.scheduling.exceptions.ScheduleNotFound;
 import com.example.empsched.scheduling.repository.*;
 import com.example.empsched.scheduling.solver.WorkSchedule;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,5 +66,9 @@ public class ScheduleService {
         List<EmployeeAvailability> availabilities = availabilityRepository
                 .findAllByDateBetween(schedule.getStartDate(), schedule.getEndDate());
         return new WorkSchedule(scheduleId, employees, shifts, availabilities);
+    }
+
+    public Page<Schedule> getSchedulesForOrganisation(final UUID organisationId, final Pageable pageable) {
+        return scheduleRepository.findAllByOrganisationId(organisationId, pageable);
     }
 }
