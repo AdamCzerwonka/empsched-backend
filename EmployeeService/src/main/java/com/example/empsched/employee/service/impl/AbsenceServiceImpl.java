@@ -3,6 +3,7 @@ package com.example.empsched.employee.service.impl;
 import com.example.empsched.employee.entity.Absence;
 import com.example.empsched.employee.entity.Employee;
 import com.example.empsched.employee.exception.AbsenceAlreadyApprovedException;
+import com.example.empsched.employee.exception.AbsenceNotFoundException;
 import com.example.empsched.employee.exception.AbsenceOverlapException;
 import com.example.empsched.employee.exception.EmployeeNotFoundException;
 import com.example.empsched.employee.repository.AbsenceRepository;
@@ -30,11 +31,24 @@ public class AbsenceServiceImpl implements AbsenceService {
     private final EmployeeRepository employeeRepository;
 
     @Override
+    public Page<Absence> getAllAbsences(final UUID organisationId, final LocalDate startFrom, final LocalDate startTo, final boolean approved, final Pageable pageable) {
+        BaseThrowChecks.checkDateValidity(startFrom, startTo);
+        Specification<Absence> specification = AbsenceSpecification.filterByOrganisationAndDateAndApprovalStatus(organisationId, startFrom, startTo, approved);
+        return absenceRepository.findAll(specification, pageable);
+    }
+
+    @Override
     public Page<Absence> getAbsencesForEmployee(final UUID employeeId, final LocalDate startFrom, final LocalDate startTo, final Pageable pageable) {
         BaseThrowChecks.checkDateValidity(startFrom, startTo);
         Specification<Absence> specification = AbsenceSpecification.filterByEmployeeIdAndOverlappingDates(employeeId, startFrom, startTo);
 
         return absenceRepository.findAll(specification, pageable);
+    }
+
+    @Override
+    public Absence getAbsenceById(UUID absenceId, UUID organisationId) {
+        return absenceRepository.findByIdWithEmployee(absenceId, organisationId)
+                .orElseThrow(() -> new AbsenceNotFoundException(absenceId));
     }
 
     @Override
@@ -76,9 +90,31 @@ public class AbsenceServiceImpl implements AbsenceService {
         absenceRepository.deleteById(absenceId);
     }
 
-    private void throwIfOverlappingAbsences(Absence absence, Employee employee) {
-         if (absenceRepository.hasEmployeeCollidingAbsences(employee.getId(), absence.getStartDate(), absence.getEndDate())) {
-             throw new AbsenceOverlapException();
-         }
+    @Override
+    public void approveAbsence(UUID absenceId, UUID organisationIdFromContext) {
+        final Absence absence = absenceRepository.findByIdWithEmployee(absenceId, organisationIdFromContext)
+                .orElseThrow(() -> new AbsenceNotFoundException(absenceId));
+
+        BaseThrowChecks.throwIfNotRelated(organisationIdFromContext, absence.getEmployee().getOrganisation().getId());
+        absence.setApproved(true);
+        absenceRepository.save(absence);
+    }
+
+    @Override
+    public void unapproveAbsence(final UUID absenceId, final UUID organisationIdFromContext) {
+        final Absence absence = absenceRepository.findByIdWithEmployee(absenceId, organisationIdFromContext)
+                .orElseThrow(
+                        () -> new AbsenceNotFoundException(absenceId)
+                );
+
+        BaseThrowChecks.throwIfNotRelated(organisationIdFromContext, absence.getEmployee().getOrganisation().getId());
+        absence.setApproved(false);
+        absenceRepository.save(absence);
+    }
+
+    private void throwIfOverlappingAbsences(final Absence absence,final Employee employee) {
+        if (absenceRepository.hasEmployeeCollidingAbsences(employee.getId(), absence.getStartDate(), absence.getEndDate())) {
+            throw new AbsenceOverlapException();
+        }
     }
 }

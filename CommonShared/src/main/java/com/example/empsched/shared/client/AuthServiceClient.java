@@ -2,6 +2,7 @@ package com.example.empsched.shared.client;
 
 import com.example.empsched.shared.dto.user.CreateUserRequest;
 import com.example.empsched.shared.dto.user.UserResponse;
+import com.example.empsched.shared.util.RequestContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,10 @@ public class AuthServiceClient {
 
     public ResponseEntity<UserResponse> createUser(final CreateUserRequest request) {
         return serviceClient.sendRequest(SERVICE_TYPE, "/users", HttpMethod.POST, request, UserResponse.class);
+    }
+
+    public ResponseEntity<UserResponse> createUser(final CreateUserRequest request, final RequestContext context) {
+        return serviceClient.sendRequest(SERVICE_TYPE, "/users", HttpMethod.POST, request, UserResponse.class, context);
     }
 
     public ResponseEntity<Void> deleteUser(final UUID id) {

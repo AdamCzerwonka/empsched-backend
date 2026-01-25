@@ -1,6 +1,8 @@
 package com.example.empsched.organisation.activity;
 
 import com.example.empsched.organisation.entity.Position;
+import com.example.empsched.shared.dto.organisation.CreateOrganisationRequest;
+import com.example.empsched.shared.dto.organisation.OrganisationResponse;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
 import com.example.empsched.shared.dto.position.PositionResponse;
 import com.example.empsched.shared.util.RequestContext;
@@ -22,4 +24,12 @@ public interface PositionActivities {
 
     @ActivityMethod
     void deletePositionInOrganisationService(final UUID positionId, final RequestContext context);
+
+    @ActivityMethod
+    PositionResponse createPositionInSchedulingService(final CreatePositionRequest request, final RequestContext context);
+
+    @ActivityMethod
+    void deletePositionInSchedulingService(final UUID positionId, final RequestContext context);
+
+
 }

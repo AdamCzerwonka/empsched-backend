@@ -44,6 +44,9 @@ public class CreatePositionWorkflowImpl implements CreatePositionWorkflow {
 
             saga.addCompensation(() -> positionActivities.deletePositionInEmployeeService(positionId, context));
             positionActivities.createPositionInEmployeeService(createPositionRequest, context);
+
+            saga.addCompensation(() -> positionActivities.deletePositionInSchedulingService(positionId, context));
+            positionActivities.createPositionInSchedulingService(createPositionRequest, context);
             log.info("Position created successfully with ID: {}", positionId);
             return position;
         } catch (Exception e) {

@@ -1,8 +1,6 @@
 package com.example.empsched.shared.entity;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Version;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,6 +17,7 @@ import java.util.UUID;
 @MappedSuperclass
 @NoArgsConstructor
 public abstract class AbstractEntity {
+
     @Id
     private UUID id;
     @Version

@@ -9,6 +9,7 @@ public enum EmployeeErrorCodes implements ErrorCode {
     EMPLOYEE_LIMIT_REACHED("employee.limit.reached"),
     ORGANISATION_NOT_FOUND("organisation.not.found"),
     POSITION_NOT_FOUND("position.not.found"),
+    ABSENCE_NOT_FOUND("absence.not.found"),
     FILE_PARSING_FAILED("file.parsing.failed"),
     FILE_NOT_FOUND("file.not.found");
 

@@ -7,4 +7,10 @@ import lombok.NoArgsConstructor;
 public class WorkflowTasks {
     public static final String WORKER_EMPLOYEE_MANAGEMENT = "employee-management-worker";
     public static final String TASK_QUEUE_EMPLOYEE_MANAGEMENT = "TASK_QUEUE_EMPLOYEE_MANAGEMENT";
+
+    public static final String WORKER_ABSENCE_MANAGEMENT = "absence-management-worker";
+    public static final String TASK_QUEUE_ABSENCE_MANAGEMENT = "TASK_QUEUE_ABSENCE_MANAGEMENT";
+
+    public static final String WORKER_EMPLOYEE_POSITION_MANAGEMENT = "employee-position-management-worker";
+    public static final String TASK_QUEUE_EMPLOYEE_POSITION_MANAGEMENT = "TASK_QUEUE_EMPLOYEE_POSITION_MANAGEMENT";
 }

@@ -4,9 +4,10 @@ import com.example.empsched.organisation.activity.PositionActivities;
 import com.example.empsched.organisation.entity.Position;
 import com.example.empsched.organisation.service.PositionService;
 import com.example.empsched.organisation.util.WorkflowTasks;
+import com.example.empsched.shared.client.EmployeeServiceClient;
+import com.example.empsched.shared.client.SchedulingServiceClient;
 import com.example.empsched.shared.dto.position.CreatePositionRequest;
 import com.example.empsched.shared.dto.position.PositionResponse;
-import com.example.empsched.shared.client.EmployeeServiceClient;
 import com.example.empsched.shared.util.RequestContext;
 import io.temporal.spring.boot.ActivityImpl;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public class PositionActivitiesImpl implements PositionActivities {
     private final EmployeeServiceClient employeeServiceClient;
     private final PositionService positionService;
+    private final SchedulingServiceClient schedulingServiceClient;
 
     @Override
     public PositionResponse createPositionInEmployeeService(final CreatePositionRequest request, final RequestContext context) {
@@ -40,4 +42,16 @@ public class PositionActivitiesImpl implements PositionActivities {
     public void deletePositionInOrganisationService(final UUID positionId, final RequestContext context) {
         positionService.deletePosition(positionId, context.getOrganisationId());
     }
+
+    @Override
+    public PositionResponse createPositionInSchedulingService(CreatePositionRequest request, RequestContext context) {
+        return schedulingServiceClient.createPosition(request, context).getBody();
+    }
+
+    @Override
+    public void deletePositionInSchedulingService(UUID positionId, RequestContext context) {
+        schedulingServiceClient.deletePosition(positionId, context);
+    }
+
+
 }
