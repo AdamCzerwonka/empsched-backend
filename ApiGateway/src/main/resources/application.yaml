@@ -15,9 +15,14 @@ spring:
           globalcors:
             cors-configurations:
               '[/**]':
-                allowed-origins: '*'
-                allowed-methods: '*'
-                allowed-headers: '*'
+                allowed-origins:
+                  - "http://localhost:5173"
+                  - "http://localhost:4173"
+                allowed-methods:
+                  - "*"
+                allowed-headers:
+                  - "*"
+                allow-credentials: true
           default-filters:
             - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
 
