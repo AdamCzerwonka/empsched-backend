@@ -18,7 +18,6 @@ spring:
                 allowed-origins:
                   - "http://localhost:5173"
                   - "http://localhost:4173"
-                  - "https://cuneate-aphidious-clement.ngrok-free.dev"
                 allowed-methods:
                   - "*"
                 allowed-headers:
