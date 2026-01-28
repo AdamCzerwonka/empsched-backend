@@ -56,6 +56,14 @@ public class EmployeeController {
         return ResponseEntity.ok(baseMapper.mapToPagedResponse(employeesPage, mapper::mapToEmployeeResponse));
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<EmployeeResponse> getMe() {
+        final UUID employeeId = CredentialsExtractor.getUserIdFromContext();
+        final Employee employee = employeeService.getEmployeeById(employeeId);
+        return ResponseEntity.ok(mapper.mapToEmployeeResponse(employee));
+    }
+
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ORGANISATION_ADMIN')")
     public ResponseEntity<EmployeeResponse> createEmployee(@RequestBody @Valid CreateEmployeeRequest request) {

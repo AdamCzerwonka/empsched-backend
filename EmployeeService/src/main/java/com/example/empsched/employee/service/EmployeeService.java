@@ -12,6 +12,8 @@ public interface EmployeeService {
 
     Employee createEmployee(final Employee employee, final UUID organisationId);
 
+    Employee getEmployeeById(final UUID employeeId);
+
     void deleteEmployee(final UUID employeeId, final UUID organisationId);
 
     byte[] getProfilePictureOfEmployee(final UUID employeeId);

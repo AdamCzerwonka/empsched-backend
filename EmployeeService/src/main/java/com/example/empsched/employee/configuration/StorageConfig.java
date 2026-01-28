@@ -11,11 +11,10 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class StorageConfig {
     @Bean
-    @Profile("dev")
+    @Profile("prod")
     public Storage localStorage(
             @Value("${gcs.mock-host}") String host,
-            @Value("${gcs.project-id}") String projectId
-    ) {
+            @Value("${gcs.project-id}") String projectId) {
         return StorageOptions.newBuilder()
                 .setHost(host)
                 .setProjectId(projectId)
@@ -24,9 +23,9 @@ public class StorageConfig {
                 .getService();
     }
 
-    @Bean
-    @Profile("prod")
-    public Storage cloudStorage() {
-        return StorageOptions.getDefaultInstance().getService();
-    }
+    // @Bean
+    // @Profile("prod")
+    // public Storage cloudStorage() {
+    // return StorageOptions.getDefaultInstance().getService();
+    // }
 }
