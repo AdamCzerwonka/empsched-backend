@@ -101,7 +101,7 @@ public class PositionServiceImpl implements PositionService {
                     titleKey,
                     bodyKey,
                     Map.of("positionId", position.getId().toString()),
-                    "/organisation?tab=details",
+                    "/my-account-settings",
                     Map.of("positionId", position.getId().toString())
             );
 
