@@ -22,7 +22,7 @@ import java.util.UUID;
 public interface AbsenceRepository extends JpaRepository<Absence, UUID>, JpaSpecificationExecutor<Absence> {
     @NonNull
     @Override
-    @EntityGraph(attributePaths = {"employee", "employee.organisation"})
+    @EntityGraph(attributePaths = {"employee", "employee.organisation", "employee.positions.organisation"})
     Page<Absence> findAll(Specification<Absence> specification, @NonNull Pageable pageable);
 
     @EntityGraph(attributePaths = {"employee", "employee.organisation"})
