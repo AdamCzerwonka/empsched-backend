@@ -1,5 +1,8 @@
 package com.example.empsched.shared.dto.employee;
 
+import com.example.empsched.shared.dto.position.PositionResponse;
+
+import java.util.List;
 import java.util.UUID;
 
 public record EmployeeResponse(
@@ -8,6 +11,7 @@ public record EmployeeResponse(
         String lastName,
         String email,
         String phoneNumber,
-        UUID organisationId
+        UUID organisationId,
+        List<PositionResponse> positions
 ) {
 }

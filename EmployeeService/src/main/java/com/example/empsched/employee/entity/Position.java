@@ -13,6 +13,12 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class Position extends AbstractEntity {
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "description", length = 5000)
+    private String description;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, updatable = false)
     private Organisation organisation;

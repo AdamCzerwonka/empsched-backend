@@ -48,8 +48,10 @@ public interface DtoMapper {
     Employee mapToEmployee(UUID id, CreateOrganisationWithOwnerRequest request);
 
     @Mapping(source = "organisation.id", target = "organisationId")
+    @Mapping(source = "positions", target = "positions")
     EmployeeResponse mapToEmployeeResponse(Employee employee);
 
+    @Mapping(source = "organisation.id", target = "organisationId")
     PositionResponse mapToPositionResponse(Position position);
 
     Position mapToPosition(CreatePositionRequest request);

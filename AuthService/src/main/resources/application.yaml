@@ -52,3 +52,8 @@ jwt:
     key: classpath:certs/public.pem
   private:
     key: classpath:certs/private.pem
+push-notifications:
+  vapid:
+    public-key: ${VAPID_PUBLIC_KEY:}
+    private-key: ${VAPID_PRIVATE_KEY:}
+    subject: mailto:admin@empsched.com

@@ -29,6 +29,8 @@ The application is composed of the following services:
 
 *   **`EurekaDiscovery`**: A service discovery server based on Netflix Eureka. All microservices register with Eureka, which allows them to locate each other.
 
+*   **`SchedulingService`**: Manages employee schedules, including creation, updates, and lookups.
+
 ## CommonShared Library
 
 The `CommonShared` module is a vital part of this project. It contains code and classes that are used across multiple services. The primary purpose of this library is to:
@@ -44,6 +46,30 @@ The `CommonShared` library typically includes:
 *   **Model Classes**: Shared domain models.
 
 To use the `CommonShared` library in another service, you need to add it as a dependency in the service's `pom.xml` file.
+
+## Push Notifications
+
+The application supports sending push notifications to the frontend client using the Web Push Protocol. This is used to notify users of important events, such as being assigned to a new schedule.
+
+The implementation is split between two services:
+
+*   **`AuthService`**: Responsible for managing user subscriptions.
+    *   `POST /api/v1/notifications/subscribe`: Allows a user to register their browser's push subscription.
+    *   `POST /api/v1/notifications/unsubscribe`: Allows a user to remove their subscription.
+    *   `GET /api/v1/notifications/vapidPublicKey`: Provides the VAPID public key to the client.
+
+*   **`EmployeeService`**: Responsible for triggering and sending notifications.
+    *   When a relevant event occurs (e.g., a new schedule is created for an employee), this service constructs the notification payload and uses the `WebPushService` to send it to the appropriate user.
+
+### Configuration
+
+To enable push notifications, you must provide VAPID (Voluntary Application Server Identification) keys. These keys are used to secure the push messages.
+
+The following environment variables must be set for the application in `.env`:
+*   `VAPID_PUBLIC_KEY`: The public key, which is shared with the client.
+*   `VAPID_PRIVATE_KEY`: The private key, which must be kept secret on the server.
+
+You can generate these keys using online tools or a library like `web-push`.
 
 ## Getting Started
 
@@ -65,10 +91,13 @@ mvn clean install
 
 The easiest way to run the entire application is by using the provided Docker Compose setup.
 
-1.  **Build the Docker images**:
+1.  **Configure Environment**:
+    Copy the `.env.example` and `.env.services.example` files to `.env` and `.env.services` respectively, and fill in the required values.
+
+2.  **Build the Docker images**:
     Each service has a `Dockerfile` that can be used to build a Docker image.
 
-2.  **Run with Docker Compose**:
+3.  **Run with Docker Compose**:
     Navigate to the `docker` directory and run:
 
     ```bash
