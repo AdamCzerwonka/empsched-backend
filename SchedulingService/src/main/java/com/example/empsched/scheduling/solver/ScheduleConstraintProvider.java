@@ -6,6 +6,7 @@ import com.example.empsched.scheduling.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.temporal.IsoFields;
 import java.util.stream.Collectors;
 
 @Component
@@ -14,7 +15,7 @@ public class ScheduleConstraintProvider implements ConstraintProvider {
 
     @Override
     public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
-        return new Constraint[] {
+        return new Constraint[]{
                 requiredSkill(constraintFactory),
                 maxWorkingHours(constraintFactory),
                 noOverlappingShifts(constraintFactory),
@@ -56,12 +57,26 @@ public class ScheduleConstraintProvider implements ConstraintProvider {
     Constraint maxWorkingHours(ConstraintFactory factory) {
         return factory.forEach(Shift.class)
                 .filter(shift -> shift.getAssignedEmployee() != null)
+                // FIX: Group by Employee AND the specific Week they are working in
                 .groupBy(Shift::getAssignedEmployee,
+                        this::extractYearWeek,
                         ConstraintCollectors.sumLong(Shift::getDurationInMinutes))
-                .filter((employee, totalMinutes) -> totalMinutes > (employee.getMaxWeeklyHours() * 60L))
+
+                // Now the filter checks the total for THAT specific week
+                .filter((employee, week, totalMinutes) -> totalMinutes > (employee.getMaxWeeklyHours() * 60L))
+
                 .penalize(HardSoftScore.ONE_HARD,
-                        (employee, totalMinutes) -> (int) (totalMinutes - (employee.getMaxWeeklyHours() * 60)))
+                        (employee, week, totalMinutes) -> (int) (totalMinutes - (employee.getMaxWeeklyHours() * 60)))
                 .asConstraint("Max working hours exceeded");
+    }
+
+    // Helper method to create a unique ID for each week (e.g., "2024-W52")
+    // We need Year + Week because "Week 1" happens every year.
+    private String extractYearWeek(Shift shift) {
+        var date = shift.getStartTime().toLocalDate();
+        int week = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+        int year = date.get(IsoFields.WEEK_BASED_YEAR);
+        return year + "-W" + week;
     }
 
     public Constraint employeeUnavailable(ConstraintFactory constraintFactory) {
