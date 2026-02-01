@@ -1,5 +1,7 @@
 server:
   port: 8080
+  ssl:
+    key-store-password: P@ssw0rd123
 eureka:
   client:
     service-url:
